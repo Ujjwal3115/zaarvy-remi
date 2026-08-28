@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>REMI: Semantic Work Graph</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Google Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --accent: #D0D02D;
+      --accent-hover: #b8b81d;
+      --accent-text: #0f172a;
+      
+      /* Node Group Colors */
+      --node-project: #D0D02D;
+      --node-project-stroke: #0a0c12;
+      --node-tech: #38bdf8;
+      --node-author: #c084fc;
+
+      /* Dark Theme Defaults */
+      --bg: #0a0c12;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --dot-color: rgba(255, 255, 255, 0.22);
+      
+      --glass-bg: rgba(15, 20, 32, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+
+      --card-bg: rgba(26, 34, 50, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --link-color: rgba(255, 255, 255, 0.22);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --dot-color: rgba(15, 23, 42, 0.28);
+      
+      --glass-bg: rgba(255, 255, 255, 0.9);
+      --glass-border: rgba(15, 23, 42, 0.15);
+      --glass-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(15, 23, 42, 0.12);
+      --link-color: rgba(15, 23, 42, 0.3);
+
+      --node-project: #c2c219;
+      --node-project-stroke: #0f172a;
+      --node-tech: #0284c7;
+      --node-author: #9333ea;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
+    
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
+      background-size: 24px 24px;
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    
+    #canvas { width: 100vw; height: 100vh; }
+
+    .material-symbols-outlined {
+      font-size: 20px;
+      vertical-align: middle;
+      user-select: none;
+    }
+
+    /* Top-Left Header */
+    .header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      min-width: 280px;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .header h1 span { color: var(--accent); }
+    .header p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Semantic Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--glass-border);
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .dot-project { width: 10px; height: 10px; border-radius: 50%; background: var(--node-project); border: 1.5px solid var(--node-project-stroke); }
+    .dot-tech { width: 10px; height: 10px; border-radius: 50%; background: var(--node-tech); }
+    .dot-author { width: 10px; height: 10px; border-radius: 50%; background: var(--node-author); }
+
+    /* Bottom-Left Controls Bar */
+    .controls-bar {
+      position: absolute;
+      bottom: 24px;
+      left: 20px;
+      z-index: 10;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 6px 10px;
+      border-radius: 30px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-control {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .btn-control:hover {
+      background: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .theme-toggle-btn {
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      padding: 0 14px;
+      height: 36px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .theme-toggle-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(208, 208, 45, 0.4);
+    }
+
+    .divider {
+      width: 1px;
+      height: 20px;
+      background: var(--glass-border);
+      margin: 0 2px;
+    }
+
+    /* Glassmorphic Slide-out Panel */
+    .side-panel {
+      position: absolute;
+      top: 0;
+      right: -440px;
+      width: 430px;
+      height: 100vh;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-left: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+    }
+    .side-panel.active { right: 0; }
+
+    .panel-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .panel-title { font-size: 20px; font-weight: 800; color: var(--text); margin-top: 6px; letter-spacing: -0.4px; line-height: 1.3; }
+    .panel-badge { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .badge-project { background: var(--accent); color: var(--accent-text); }
+    .badge-tech { background: rgba(56, 189, 248, 0.2); color: var(--node-tech); border: 1px solid var(--node-tech); }
+    .badge-author { background: rgba(192, 132, 252, 0.2); color: var(--node-author); border: 1px solid var(--node-author); }
+
+    .close-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .close-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+
+    .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    .log-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+    .log-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .log-date { font-size: 11px; font-weight: 700; color: var(--node-tech); margin-bottom: 6px; }
+    .log-summary { font-size: 13px; color: var(--text); line-height: 1.5; word-break: break-word; font-weight: 500; }
+    .log-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag-chip { font-size: 10px; font-weight: 700; padding: 3px 8px; background: rgba(208, 208, 45, 0.18); color: var(--text); border-radius: 6px; border: 1px solid var(--accent); }
+
+    /* Node & Link Styles */
+    .links line { stroke: var(--link-color); stroke-opacity: 0.85; stroke-width: 2.2px; }
+    .nodes circle { cursor: pointer; transition: r 0.2s ease, filter 0.2s ease; }
+    .nodes circle:hover { filter: drop-shadow(0 0 10px var(--accent)); }
+    text { font-size: 11px; fill: var(--text); pointer-events: none; text-anchor: middle; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- Top-Left Header -->
+  <div class="header">
+    <h1>REMI <span>Knowledge Graph</span></h1>
+    <p>Click any node to view history & commits</p>
+    <div class="legend">
+      <div class="legend-item"><div class="dot-project"></div> Project</div>
+      <div class="legend-item"><div class="dot-tech"></div> Tech Stack</div>
+      <div class="legend-item"><div class="dot-author"></div> Contributor</div>
+    </div>
+  </div>
+
+  <div id="canvas"></div>
+
+  <!-- Bottom-Left Control Toolbar with Material Icons -->
+  <div class="controls-bar">
+    <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">
+      <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+      <span id="theme-text">Dark Mode</span>
+    </button>
+    <div class="divider"></div>
+    <button class="btn-control" onclick="zoomIn()" title="Zoom In">
+      <span class="material-symbols-outlined">add</span>
+    </button>
+    <button class="btn-control" onclick="zoomOut()" title="Zoom Out">
+      <span class="material-symbols-outlined">remove</span>
+    </button>
+    <button class="btn-control" onclick="resetZoom()" title="Reset Zoom">
+      <span class="material-symbols-outlined">restart_alt</span>
+    </button>
+  </div>
+
+  <!-- Detail Sidebar -->
+  <div class="side-panel" id="side-panel">
+    <div class="panel-header">
+      <div>
+        <span class="panel-badge" id="panel-badge">PROJECT</span>
+        <div class="panel-title" id="panel-title">Project Name</div>
+      </div>
+      <button class="close-btn" onclick="closePanel()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="panel-body" id="panel-body">
+      <!-- Activity details dynamically injected -->
+    </div>
+  </div>
+
+  <script>
+    const graphData = { nodes: [], links: [], logs: [] };
+
+    // Theme Switcher Logic with Material Icons
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+
+      document.getElementById('theme-icon').innerText = next === 'dark' ? 'dark_mode' : 'light_mode';
+      document.getElementById('theme-text').innerText = next === 'dark' ? 'Dark Mode' : 'Light Mode';
+    }
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const svg = d3.select("#canvas")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    const g = svg.append("g");
+
+    // D3 Zoom Behavior
+    const zoomBehavior = d3.zoom().scaleExtent([0.2, 5]).on("zoom", (event) => {
+      g.attr("transform", event.transform);
+    });
+
+    svg.call(zoomBehavior);
+
+    function zoomIn() {
+      svg.transition().duration(300).call(zoomBehavior.scaleBy, 1.3);
+    }
+
+    function zoomOut() {
+      svg.transition().duration(300).call(zoomBehavior.scaleBy, 0.7);
+    }
+
+    function resetZoom() {
+      svg.transition().duration(400).call(zoomBehavior.transform, d3.zoomIdentity);
+    }
+
+    // Colors mapping per group
+    function getNodeColor(group) {
+      switch (group) {
+        case 'project': return 'var(--node-project)';
+        case 'tech': return 'var(--node-tech)';
+        case 'author': return 'var(--node-author)';
+        default: return 'var(--node-tech)';
+      }
+    }
+
+    function getNodeRadius(group) {
+      switch (group) {
+        case 'project': return 22;
+        case 'tech': return 11;
+        case 'author': return 13;
+        default: return 11;
+      }
+    }
+
+    // Force Simulation
+    const simulation = d3.forceSimulation(graphData.nodes)
+      .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))
+      .force("charge", d3.forceManyBody().strength(-350))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(40));
+
+    // Links
+    const link = g.append("g")
+      .attr("class", "links")
+      .selectAll("line")
+      .data(graphData.links)
+      .enter().append("line");
+
+    // Node Groups
+    const node = g.append("g")
+      .attr("class", "nodes")
+      .selectAll("g")
+      .data(graphData.nodes)
+      .enter().append("g")
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended))
+      .on("click", (event, d) => openPanel(d));
+
+    // Circles
+    node.append("circle")
+      .attr("r", d => getNodeRadius(d.group))
+      .attr("fill", d => getNodeColor(d.group))
+      .attr("stroke", d => d.group === 'project' ? 'var(--node-project-stroke)' : 'var(--bg)')
+      .attr("stroke-width", 2.5);
+
+    // Labels
+    node.append("text")
+      .attr("dy", d => getNodeRadius(d.group) + 16)
+      .text(d => d.label || d.id);
+
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      node
+        .attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    // Side Panel Logic
+    function openPanel(nodeData) {
+      const panel = document.getElementById('side-panel');
+      const title = document.getElementById('panel-title');
+      const badge = document.getElementById('panel-badge');
+      const body = document.getElementById('panel-body');
+
+      title.innerText = nodeData.label || nodeData.id;
+      badge.innerText = nodeData.group.toUpperCase();
+      badge.className = `panel-badge badge-${nodeData.group}`;
+
+      let matchingLogs = [];
+
+      if (nodeData.group === 'project') {
+        matchingLogs = graphData.logs.filter(l => l.project_name === nodeData.id);
+      } else {
+        matchingLogs = graphData.logs.filter(l => l.tags && l.tags.toLowerCase().includes(nodeData.id.toLowerCase()));
+      }
+
+      if (matchingLogs.length === 0) {
+        body.innerHTML = `<div style="color: var(--text-muted); text-align: center; margin-top: 40px;">No detailed logs found for this node.</div>`;
+      } else {
+        body.innerHTML = matchingLogs.map(l => `
+          <div class="log-card">
+            <div class="log-date">${l.created_at || 'Recent'}</div>
+            <div class="log-summary">${l.action_summary}</div>
+            <div class="log-tags">
+              ${(l.tags || '').split(',').map(t => t.trim()).filter(Boolean).map(t => `<span class="tag-chip">${t}</span>`).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      panel.classList.add('active');
+    }
+
+    function closePanel() {
+      document.getElementById('side-panel').classList.remove('active');
+    }
+  </script>
+</body>
+</html>

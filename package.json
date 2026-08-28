@@ -1,0 +1,36 @@
+{
+  "name": "zaarvy-remi",
+  "version": "1.0.0",
+  "description": "Autonomous Project Memory & Work Graph CLI",
+  "main": "bin/remi.js",
+  "type": "module",
+  "bin": {
+    "zaarvy-remi": "./bin/remi.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "start": "node bin/remi.js"
+  },
+  "keywords": [
+    "cli",
+    "memory",
+    "project",
+    "graph"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.112.4",
+    "better-sqlite3": "^13.0.3",
+    "chalk": "^6.0.0",
+    "commander": "^15.0.0",
+    "dotenv": "^17.4.2",
+    "inquirer": "^14.2.0",
+    "node-notifier": "^10.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^10.9.1",
+    "jest": "^30.4.2",
+    "prettier": "^3.9.6"
+  }
+}
