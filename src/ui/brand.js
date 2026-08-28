@@ -84,9 +84,14 @@ export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph')
   console.log(lime(` ███╔╝  ██╔══██║██╔══██║██╔══██╗╚██╗ ██╔╝  ╚██╔╝  `));
   console.log(lime(`███████╗██║  ██║██║  ██║██║  ██║ ╚████╔╝    ██║   `));
   console.log(lime(`╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝     ╚═╝   `));
+  console.log(lime(`██████╗ ███████╗███╗   ███╗██╗`));
+  console.log(lime(`██╔══██╗██╔════╝████╗ ████║██║`));
+  console.log(lime(`██████╔╝█████╗  ██╔████╔██║██║`));
+  console.log(lime(`██╔══██╗██╔══╝  ██║╚██╔╝██║██║`));
+  console.log(lime(`██║  ██║███████╗██║ ╚═╝ ██║██║`));
+  console.log(lime(`╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝`));
   
-  console.log(`\n  ` + BRAND.badge('ZAARVY') + `  ${MASCOT.idle}  ` + chalk.bold.white('REMI CLI') + `  ` + BRAND.gray(`v1.0.0`));
-  console.log(dim(`  ${subTitle}\n`));
+  console.log(`\n  ` + BRAND.badge('v1.0.0 CLI') + ` ` + dim(`${subTitle}\n`));
 }
 
 // Banner for specific command titles
