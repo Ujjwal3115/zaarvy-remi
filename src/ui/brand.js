@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import readline from 'readline';
 
 // Zaarvy Official Brand Palette
 export const BRAND = {
@@ -22,6 +23,55 @@ export const MASCOT = {
   stats: `( 📊_📊 )`,
   standup: `( 🚀_🚀 )`,
 };
+
+// Animated Mascot Frames for real-time motion (like Claude Code)
+export const ANIMATED_MASCOT_FRAMES = [
+  '(⚡_⚡)',
+  '(o_o )',
+  '( ⚡_⚡)',
+  '( -_-)',
+  '( ✨_✨)',
+  '( ⚙️_⚙️)',
+];
+
+export function startMascotSpinner(text = 'Processing...') {
+  let frameIdx = 0;
+
+  if (process.stdout.isTTY) {
+    process.stdout.write('\x1B[?25l'); // Hide terminal cursor
+  }
+
+  const timer = setInterval(() => {
+    const frame = ANIMATED_MASCOT_FRAMES[frameIdx % ANIMATED_MASCOT_FRAMES.length];
+    frameIdx++;
+
+    if (process.stdout.isTTY) {
+      readline.clearLine(process.stdout, 0);
+      readline.cursorTo(process.stdout, 0);
+      process.stdout.write(`${BRAND.yellowBold(frame)}  ${BRAND.badge('ZAARVY')}  ${chalk.white(text)}`);
+    } else if (frameIdx === 1) {
+      console.log(`${MASCOT.thinking} ${text}`);
+    }
+  }, 130);
+
+  return {
+    stop: (finalMessage, success = true) => {
+      clearInterval(timer);
+      if (process.stdout.isTTY) {
+        readline.clearLine(process.stdout, 0);
+        readline.cursorTo(process.stdout, 0);
+        process.stdout.write('\x1B[?25h'); // Restore terminal cursor
+      }
+      if (finalMessage) {
+        if (success) {
+          printSuccess(finalMessage);
+        } else {
+          console.log(`${MASCOT.idle} ${chalk.red(finalMessage)}`);
+        }
+      }
+    }
+  };
+}
 
 // Render Box Banner for Header
 export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph') {
