@@ -78,20 +78,15 @@ export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph')
   const lime = BRAND.yellowBold;
   const dim = BRAND.dim;
 
-  console.log(lime(`\n███████╗ █████╗  █████╗ ██████╗ ██╗   ██╗██╗   ██╗`));
-  console.log(lime(`╚══███╔╝██╔══██╗██╔══██╗██╔══██╗██║   ██║╚██╗ ██╔╝`));
-  console.log(lime(`  ███╔╝ ███████║███████║██████╔╝██║   ██║ ╚████╔╝ `));
-  console.log(lime(` ███╔╝  ██╔══██║██╔══██║██╔══██╗╚██╗ ██╔╝  ╚██╔╝  `));
-  console.log(lime(`███████╗██║  ██║██║  ██║██║  ██║ ╚████╔╝    ██║   `));
-  console.log(lime(`╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝     ╚═╝   `));
-  console.log(lime(`██████╗ ███████╗███╗   ███╗██╗`));
-  console.log(lime(`██╔══██╗██╔════╝████╗ ████║██║    ▄▄████▄▄`));
-  console.log(lime(`██████╔╝█████╗  ██╔████╔██║██║   ▐██ ▀▀ ██▌`));
-  console.log(lime(`██╔══██╗██╔══╝  ██║╚██╔╝██║██║    ██ `) + chalk.white(`⚡`) + lime(` ██`));
-  console.log(lime(`██║  ██║███████╗██║ ╚═╝ ██║██║    ▀██████▀`));
-  console.log(lime(`╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝      ▀  ▀`));
+  console.log(lime(`\n██████╗ ███████╗███╗   ███╗██╗`));
+  console.log(lime(`██╔══██╗██╔════╝████╗ ████║██║`));
+  console.log(lime(`██████╔╝█████╗  ██╔████╔██║██║`));
+  console.log(lime(`██╔══██╗██╔══╝  ██║╚██╔╝██║██║`));
+  console.log(lime(`██║  ██║███████╗██║ ╚═╝ ██║██║`));
+  console.log(lime(`╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝`));
   
-  console.log(`\n  ` + BRAND.badge('v1.0.0 CLI') + ` ` + dim(`${subTitle}\n`));
+  console.log(`\n  ` + BRAND.badge('v1.0.0') + ` ` + chalk.bold.white('REMI CLI') + dim(` • ${subTitle}`));
+  console.log(dim(`  A Zaarvy Ecosystem Package\n`));
 }
 
 // Banner for specific command titles
