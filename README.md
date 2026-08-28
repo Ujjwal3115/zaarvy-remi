@@ -1,7 +1,22 @@
-# 🚀 zaarvy-remi
+<div align="center">
 
-> **Autonomous Project Memory & Interactive Work Graph CLI**  
-> *Track work history, auto-sync Git commits, generate AI standup reports, and visualize your project knowledge graph.*
+```text
+██████╗ ███████╗███╗   ███╗██╗
+██╔══██╗██╔════╝████╗ ████║██║
+██████╔╝█████╗  ██╔████╔██║██║
+██╔══██╗██╔══╝  ██║╚██╔╝██║██║
+██║  ██║███████╗██║ ╚═╝ ██║██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝
+
+   v1.0.0  REMI CLI • Autonomous Project Memory & Work Graph
+  A Zaarvy Ecosystem Package
+```
+
+**Track work history, auto-sync Git commits, generate AI standup reports, and visualize your project knowledge graph.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Zaarvy Ecosystem](https://img.shields.io/badge/A_Zaarvy_Package-%23D0D02D)](https://zaarvy.in)
+</div>
 
 ---
 
@@ -15,12 +30,13 @@
 - **🔍 Full-Text Search (`zaarvy-remi search`):** Fast local SQLite FTS5 search across all past project logs.
 - **📦 Dual Backend Storage:** Choose between **Local SQLite** (default) or **Cloud Supabase** database.
 - **🔔 Proactive Desktop Reminders (`zaarvy-remi schedule`):** Silent background daemon that alerts you if you forget to log work.
+- **🤖 Beautiful TUI Dashboard:** Seamless CLI experience with animated progress states, responsive block-art headers, and signature Zaarvy formatting!
 
 ---
 
 ## 📦 Installation & Setup
 
-### Install via NPM
+### Install globally via NPM
 ```bash
 npm install -g zaarvy-remi
 ```
@@ -50,6 +66,16 @@ zaarvy-remi setup
 
 ---
 
+## 🏗️ Technical Architecture
+
+REMI is built entirely around developer workflow speed:
+- **TUI & Command Parsing:** Commander.js, Inquirer.js, Chalk for responsive, glowing 2D pixel-art terminals.
+- **AI Router Engine:** LangChain orchestration supporting local LLMs (Ollama) to cloud APIs (Gemini, Groq, OpenAI).
+- **Data Layer:** `better-sqlite3` with Full-Text Search 5 (FTS5) for blazing fast local searches, and `@supabase/supabase-js` for optional cloud syncing.
+- **Interactive Visuals:** D3.js v7 for force-directed web visualizations spawned locally.
+
+---
+
 ## 🛡️ License
 
-[MIT](LICENSE) © [Zaarvy](https://zaarvy.in)
+[MIT](LICENSE) © [Zaarvy Ecosystem](https://zaarvy.in)
