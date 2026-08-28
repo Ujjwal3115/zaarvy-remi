@@ -8,14 +8,21 @@ import { fork } from 'child_process';
 import { fileURLToPath } from 'url';
 import { printSuccess, printInfo, MASCOT, BRAND } from '../ui/brand.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const logoPath = path.join(__dirname, '../assets/logo.png');
+
 export async function scheduleCommand(rawMessage, options = {}) {
   try {
     // Instant Notification Test
     if (options.test || options.now) {
       console.log(chalk.gray(`${MASCOT.thinking} Triggering instant desktop notification...`));
       notifier.notify({
-        title: '⚡ REMI: Project Memory',
+        title: 'REMI: Project Memory',
         message: rawMessage || 'Test Notification: REMI desktop reminders are working perfectly!',
+        icon: logoPath,
+        contentImage: logoPath,
+        appID: 'Zaarvy REMI',
         sound: true,
         wait: false
       });
@@ -40,8 +47,6 @@ export async function scheduleCommand(rawMessage, options = {}) {
     // Check if we are the parent or the forked daemon
     if (!process.env.REMI_DAEMON) {
       console.log(chalk.gray(`${MASCOT.thinking} Starting background reminder daemon...`));
-      
-      const __filename = fileURLToPath(import.meta.url);
 
       const customMsg = rawMessage || options.message || '';
 
@@ -88,8 +93,11 @@ if (process.env.REMI_DAEMON === 'true') {
 
       if (shouldRemind) {
         notifier.notify({
-          title: '⚡ REMI: Project Memory',
+          title: 'REMI: Project Memory',
           message: customMessage,
+          icon: logoPath,
+          contentImage: logoPath,
+          appID: 'Zaarvy REMI',
           sound: true,
           wait: false
         });
