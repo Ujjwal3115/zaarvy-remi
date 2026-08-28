@@ -5,7 +5,8 @@
   "main": "bin/remi.js",
   "type": "module",
   "bin": {
-    "zaarvy-remi": "./bin/remi.js"
+    "zaarvy-remi": "./bin/remi.js",
+    "remi": "./bin/remi.js"
   },
   "scripts": {
     "test": "jest",
