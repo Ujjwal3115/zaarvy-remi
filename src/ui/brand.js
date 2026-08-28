@@ -85,11 +85,11 @@ export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph')
   console.log(lime(`███████╗██║  ██║██║  ██║██║  ██║ ╚████╔╝    ██║   `));
   console.log(lime(`╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝     ╚═╝   `));
   console.log(lime(`██████╗ ███████╗███╗   ███╗██╗`));
-  console.log(lime(`██╔══██╗██╔════╝████╗ ████║██║`));
-  console.log(lime(`██████╔╝█████╗  ██╔████╔██║██║`));
-  console.log(lime(`██╔══██╗██╔══╝  ██║╚██╔╝██║██║`));
-  console.log(lime(`██║  ██║███████╗██║ ╚═╝ ██║██║`));
-  console.log(lime(`╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝`));
+  console.log(lime(`██╔══██╗██╔════╝████╗ ████║██║    ▄▄████▄▄`));
+  console.log(lime(`██████╔╝█████╗  ██╔████╔██║██║   ▐██ ▀▀ ██▌`));
+  console.log(lime(`██╔══██╗██╔══╝  ██║╚██╔╝██║██║    ██ `) + chalk.white(`⚡`) + lime(` ██`));
+  console.log(lime(`██║  ██║███████╗██║ ╚═╝ ██║██║    ▀██████▀`));
+  console.log(lime(`╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝      ▀  ▀`));
   
   console.log(`\n  ` + BRAND.badge('v1.0.0 CLI') + ` ` + dim(`${subTitle}\n`));
 }
