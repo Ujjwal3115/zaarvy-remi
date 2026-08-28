@@ -1,25 +1,47 @@
 {
   "name": "zaarvy-remi",
   "version": "1.0.0",
-  "description": "Autonomous Project Memory & Work Graph CLI",
+  "description": "Autonomous Project Memory & Interactive Work Graph CLI",
   "main": "bin/remi.js",
   "type": "module",
   "bin": {
     "zaarvy-remi": "./bin/remi.js",
     "remi": "./bin/remi.js"
   },
+  "files": [
+    "bin",
+    "src",
+    "README.md"
+  ],
   "scripts": {
     "test": "jest",
     "start": "node bin/remi.js"
   },
   "keywords": [
+    "zaarvy",
+    "remi",
     "cli",
     "memory",
-    "project",
-    "graph"
+    "work-log",
+    "standup",
+    "git-sync",
+    "knowledge-graph",
+    "d3",
+    "developer-tools",
+    "ai",
+    "gemini",
+    "ollama"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Zaarvy (https://zaarvy.in)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ujjwal3115/zaarvy-remi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ujjwal3115/zaarvy-remi/issues"
+  },
+  "homepage": "https://github.com/Ujjwal3115/zaarvy-remi#readme",
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
     "better-sqlite3": "^13.0.3",
