@@ -111,19 +111,47 @@ async function callGroq(userText, apiKey) {
 }
 
 async function callGemini(userText, apiKey) {
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: [{ parts: [{ text: userText }] }],
-      generationConfig: { responseMimeType: "application/json" }
-    })
-  });
+  const candidateModels = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-1.5-flash-latest',
+    'gemini-pro'
+  ];
 
-  if (!response.ok) throw new Error('Failed to connect to Google Gemini API.');
-  const data = await response.json();
-  return JSON.parse(data.candidates[0].content.parts[0].text);
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: `${SYSTEM_PROMPT}\n\nUser work to log:\n"${userText}"` }]
+            }
+          ],
+          generationConfig: { responseMimeType: "application/json" }
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (textContent) {
+          return JSON.parse(textContent);
+        }
+      } else {
+        const errJson = await response.json().catch(() => ({}));
+        lastError = errJson.error?.message || response.statusText;
+      }
+    } catch (err) {
+      lastError = err.message;
+    }
+  }
+
+  throw new Error(`Google Gemini API Error: ${lastError || 'Could not connect to any Gemini model.'}`);
 }
 
 async function callAnthropic(userText, apiKey) {
