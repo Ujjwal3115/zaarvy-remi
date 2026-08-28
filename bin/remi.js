@@ -121,17 +121,27 @@ Examples:
 
 // schedule
 program
-  .command('schedule')
+  .command('schedule [message]')
   .description('Start a background daemon that sends native desktop work-log reminders')
+  .option('-m, --minutes <number>', 'Minutes between reminder notifications (e.g. 2)')
   .option('-i, --interval <hours>', 'Hours between reminder notifications (default: 2)', '2')
+  .option('--test', 'Trigger an instant test desktop notification right now')
   .addHelpText('after', `
 Examples:
-  $ zaarvy-remi schedule
-  $ zaarvy-remi schedule -i 1
-  $ remi schedule --interval 4
+  # Instantly test desktop notification:
+  $ zaarvy-remi schedule --test
+  $ remi schedule --test
+
+  # Schedule reminders every 2 minutes (great for quick testing):
+  $ zaarvy-remi schedule -m 2
+  $ remi schedule --minutes 2
+
+  # Schedule reminders every 2 hours with custom message:
+  $ zaarvy-remi schedule "Remember to log your work in REMI!"
+  $ remi schedule -i 1
 `)
-  .action(async (options) => {
-    await scheduleCommand(options.interval);
+  .action(async (message, options) => {
+    await scheduleCommand(message, options);
   });
 
 // sync
