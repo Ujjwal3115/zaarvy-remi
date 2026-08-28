@@ -14,6 +14,23 @@ export const BRAND = {
   infoBadge: (text) => chalk.bgCyan.black.bold(` ${text} `),
 };
 
+// 2D Block-Art Mascot & Environment Scenes (Claude Code Style)
+export function printPixelMascotScene(title = 'Autonomous Project Memory & Work Graph') {
+  const lime = BRAND.yellowBold;
+  const cyan = chalk.cyan;
+  const gray = chalk.gray;
+
+  console.log(gray(`\n     ☁️       .   ✨      ☁️     .     ☁️ `));
+  console.log(lime(`           ▄▄█████████▄▄           `));
+  console.log(lime(`          ███  ███  ███            `) + BRAND.badge('ZAARVY CLI'));
+  console.log(lime(`          █████████████            `) + chalk.bold.white(' REMI v1.0.0'));
+  console.log(lime(`         ▐███  ███  ███▌           `));
+  console.log(lime(`          ▀▀  ▀▀ ▀▀  ▀▀            `));
+  console.log(gray(`  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`));
+  console.log(BRAND.dim(`  ${title}`));
+  console.log(gray(`  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`));
+}
+
 // 2D ASCII Mascot - "Zaarvy Bot"
 export const MASCOT = {
   idle: `(⚡_⚡)`,
@@ -24,7 +41,7 @@ export const MASCOT = {
   standup: `( 🚀_🚀 )`,
 };
 
-// Animated Mascot Frames for real-time motion (like Claude Code)
+// Animated Mascot Frames for real-time motion
 export const ANIMATED_MASCOT_FRAMES = [
   '(⚡_⚡)',
   '(o_o )',
@@ -38,7 +55,7 @@ export function startMascotSpinner(text = 'Processing...') {
   let frameIdx = 0;
 
   if (process.stdout.isTTY) {
-    process.stdout.write('\x1B[?25l'); // Hide terminal cursor
+    process.stdout.write('\x1B[?25l'); // Hide cursor
   }
 
   const timer = setInterval(() => {
@@ -60,39 +77,21 @@ export function startMascotSpinner(text = 'Processing...') {
       if (process.stdout.isTTY) {
         readline.clearLine(process.stdout, 0);
         readline.cursorTo(process.stdout, 0);
-        process.stdout.write('\x1B[?25h'); // Restore terminal cursor
+        process.stdout.write('\x1B[?25h'); // Restore cursor
       }
       if (finalMessage) {
         if (success) {
           printSuccess(finalMessage);
         } else {
-          console.log(`${MASCOT.idle} ${chalk.red(finalMessage)}`);
+          console.error(`\n${MASCOT.idle} ${chalk.red(finalMessage)}`);
         }
       }
     }
   };
 }
 
-// Render Box Banner for Header
 export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph') {
-  const line = '━'.repeat(54);
-  console.log(BRAND.yellowBold(`\n╭${line}╮`));
-  console.log(
-    BRAND.yellowBold(`│ `) +
-    BRAND.badge('ZAARVY') +
-    `  ${MASCOT.idle}  ` +
-    chalk.bold.white('REMI CLI') +
-    `  ` +
-    BRAND.gray(`v1.0.0`) +
-    ` `.repeat(13) +
-    BRAND.yellowBold(`│`)
-  );
-  console.log(
-    BRAND.yellowBold(`│ `) +
-    BRAND.dim(subTitle.padEnd(52)) +
-    BRAND.yellowBold(`│`)
-  );
-  console.log(BRAND.yellowBold(`╰${line}╯\n`));
+  printPixelMascotScene(subTitle);
 }
 
 // Banner for specific command titles
