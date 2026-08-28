@@ -73,26 +73,20 @@ export function startMascotSpinner(text = 'Processing...') {
   };
 }
 
-// Render Compact Elegant Box Banner for Header
+// Render 3D Block-Art Logo Header (Claude Code Style)
 export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph') {
-  const line = '━'.repeat(54);
-  console.log(BRAND.yellowBold(`\n╭${line}╮`));
-  console.log(
-    BRAND.yellowBold(`│ `) +
-    BRAND.badge('ZAARVY') +
-    `  ${MASCOT.idle}  ` +
-    chalk.bold.white('REMI CLI') +
-    `  ` +
-    BRAND.gray(`v1.0.0`) +
-    ` `.repeat(13) +
-    BRAND.yellowBold(`│`)
-  );
-  console.log(
-    BRAND.yellowBold(`│ `) +
-    BRAND.dim(subTitle.padEnd(52)) +
-    BRAND.yellowBold(`│`)
-  );
-  console.log(BRAND.yellowBold(`╰${line}╯\n`));
+  const lime = BRAND.yellowBold;
+  const dim = BRAND.dim;
+
+  console.log(lime(`\n███████╗ █████╗  █████╗ ██████╗ ██╗   ██╗██╗   ██╗`));
+  console.log(lime(`╚══███╔╝██╔══██╗██╔══██╗██╔══██╗██║   ██║╚██╗ ██╔╝`));
+  console.log(lime(`  ███╔╝ ███████║███████║██████╔╝██║   ██║ ╚████╔╝ `));
+  console.log(lime(` ███╔╝  ██╔══██║██╔══██║██╔══██╗╚██╗ ██╔╝  ╚██╔╝  `));
+  console.log(lime(`███████╗██║  ██║██║  ██║██║  ██║ ╚████╔╝    ██║   `));
+  console.log(lime(`╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝     ╚═╝   `));
+  
+  console.log(`\n  ` + BRAND.badge('ZAARVY') + `  ${MASCOT.idle}  ` + chalk.bold.white('REMI CLI') + `  ` + BRAND.gray(`v1.0.0`));
+  console.log(dim(`  ${subTitle}\n`));
 }
 
 // Banner for specific command titles
