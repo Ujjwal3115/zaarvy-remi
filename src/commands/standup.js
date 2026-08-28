@@ -4,6 +4,7 @@ import os from 'os';
 import Database from 'better-sqlite3';
 import chalk from 'chalk';
 import { cleanCommitMessage } from '../utils/git.js';
+import { printCommandBanner, MASCOT } from '../ui/brand.js';
 
 export async function standupCommand(options) {
   try {
@@ -46,9 +47,7 @@ export async function standupCommand(options) {
       return;
     }
 
-    console.log(chalk.blue.bold(`\n==============================================`));
-    console.log(chalk.blue.bold(`  🚀 DAILY STANDUP REPORT (${days === 1 ? 'Last 24 Hours' : `Last ${days} Days`})`));
-    console.log(chalk.blue.bold(`==============================================\n`));
+    printCommandBanner(`DAILY STANDUP REPORT (${days === 1 ? 'Last 24 Hours' : `Last ${days} Days`})`, MASCOT.standup);
 
     // Group logs by project
     const byProject = {};

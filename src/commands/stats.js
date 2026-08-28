@@ -3,6 +3,7 @@ import path from 'path';
 import os from 'os';
 import Database from 'better-sqlite3';
 import chalk from 'chalk';
+import { printCommandBanner, MASCOT, BRAND } from '../ui/brand.js';
 
 export async function statsCommand() {
   try {
@@ -65,9 +66,7 @@ export async function statsCommand() {
     }
 
     // Print Header & Banner
-    console.log(chalk.yellow.bold(`\n================================================`));
-    console.log(chalk.yellow.bold(`   🔥 REMI DEVELOPER STATS & STREAK DASHBOARD   `));
-    console.log(chalk.yellow.bold(`================================================\n`));
+    printCommandBanner('DEVELOPER STATS & STREAK DASHBOARD', MASCOT.stats);
 
     console.log(`  ${chalk.red.bold('🔥 Current Streak:')} ${chalk.green.bold(streak + ' Days')}`);
     console.log(`  ${chalk.cyan('📊 Total Work Logs:')} ${chalk.white.bold(totalLogs)}`);

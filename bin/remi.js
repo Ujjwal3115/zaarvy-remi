@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
+import { printHeader } from '../src/ui/brand.js';
 import { setupCommand } from '../src/config/setup.js';
 import { logCommand } from '../src/commands/log.js';
 import { graphCommand } from '../src/commands/graph.js';
@@ -14,6 +15,8 @@ import { standupCommand } from '../src/commands/standup.js';
 import { statsCommand } from '../src/commands/stats.js';
 
 const program = new Command();
+
+printHeader();
 
 program
   .name('zaarvy-remi')
