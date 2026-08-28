@@ -14,44 +14,24 @@ export const BRAND = {
   infoBadge: (text) => chalk.bgCyan.black.bold(` ${text} `),
 };
 
-// Responsive Pixel Mascot Banner (NO emojis, pure sleek Unicode + Responsive Width)
-export function printPixelMascotScene(title = 'Autonomous Project Memory & Work Graph') {
-  const termCols = process.stdout.columns || 60;
-  const width = Math.min(termCols - 4, 56);
-  const divider = '━'.repeat(Math.max(width, 40));
-  
-  const lime = BRAND.yellowBold;
-  const gray = chalk.gray;
-
-  console.log(gray(`\n  ·    °     +     ·     °    +     ·`));
-  console.log(lime(`         ▄▄█████████▄▄           `));
-  console.log(lime(`        ███  █   █  ███           `) + BRAND.badge('ZAARVY CLI'));
-  console.log(lime(`        █████ [⚡] █████           `) + chalk.bold.white(' REMI v1.0.0'));
-  console.log(lime(`        ▀███▄▄▄▄▄▄▄███▀           `));
-  console.log(lime(`          ▀▀  ▀▀▀  ▀▀            `));
-  console.log(gray(`  ${divider}`));
-  console.log(BRAND.dim(`  ${title}`));
-  console.log(gray(`  ${divider}\n`));
-}
-
-// Clean 2D Mascot States
+// 2D ASCII Mascot - "Zaarvy Bot"
 export const MASCOT = {
-  idle: `[⚡_⚡]`,
-  thinking: `[⚙️_⚙️]`,
-  success: `[🟢_🟢]`,
-  searching: `[🔍_🔍]`,
-  stats: `[📊_📊]`,
-  standup: `[🚀_🚀]`,
+  idle: `(⚡_⚡)`,
+  thinking: `(⚙️_⚙️)`,
+  success: `(🟢_🟢)`,
+  searching: `(🔍_🔍)`,
+  stats: `(📊_📊)`,
+  standup: `(🚀_🚀)`,
 };
 
 // Animated Mascot Frames for real-time motion
 export const ANIMATED_MASCOT_FRAMES = [
-  '[⚡_⚡]',
-  '[o_o ]',
-  '[ ⚡_⚡]',
-  '[ -_-]',
-  '[ ✨_✨]',
-  '[ ⚙️_⚙️]',
+  '(⚡_⚡)',
+  '(o_o )',
+  '( ⚡_⚡)',
+  '( -_-)',
+  '( ✨_✨)',
+  '( ⚙️_⚙️)',
 ];
 
 export function startMascotSpinner(text = 'Processing...') {
@@ -93,15 +73,32 @@ export function startMascotSpinner(text = 'Processing...') {
   };
 }
 
+// Render Compact Elegant Box Banner for Header
 export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph') {
-  printPixelMascotScene(subTitle);
+  const line = '━'.repeat(54);
+  console.log(BRAND.yellowBold(`\n╭${line}╮`));
+  console.log(
+    BRAND.yellowBold(`│ `) +
+    BRAND.badge('ZAARVY') +
+    `  ${MASCOT.idle}  ` +
+    chalk.bold.white('REMI CLI') +
+    `  ` +
+    BRAND.gray(`v1.0.0`) +
+    ` `.repeat(13) +
+    BRAND.yellowBold(`│`)
+  );
+  console.log(
+    BRAND.yellowBold(`│ `) +
+    BRAND.dim(subTitle.padEnd(52)) +
+    BRAND.yellowBold(`│`)
+  );
+  console.log(BRAND.yellowBold(`╰${line}╯\n`));
 }
 
 // Banner for specific command titles
 export function printCommandBanner(title, mascotState = MASCOT.idle) {
   const titleStr = `${mascotState}  ${title.toUpperCase()}`;
-  const termCols = process.stdout.columns || 60;
-  const width = Math.min(Math.max(48, titleStr.length + 6), termCols - 4);
+  const width = Math.max(50, titleStr.length + 8);
   const border = '═'.repeat(width);
 
   console.log(BRAND.yellowBold(`\n╔${border}╗`));
@@ -111,7 +108,7 @@ export function printCommandBanner(title, mascotState = MASCOT.idle) {
 
 // Styled Success message
 export function printSuccess(message) {
-  console.log(`[✔] ${BRAND.successBadge('SUCCESS')} ${chalk.green(message)}`);
+  console.log(`${MASCOT.success} ${BRAND.successBadge('SUCCESS')} ${chalk.green(message)}`);
 }
 
 // Styled Info message
