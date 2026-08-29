@@ -176,6 +176,86 @@ When sharing this with testers, ask them these 5 quick questions:
 
 ---
 
+---
+
+## ☁️ 5. Setting Up Supabase Cloud Sync (Optional)
+
+If you or your team want to sync your project memory across multiple machines or team members, you can use **Supabase (PostgreSQL)** instead of local SQLite.
+
+### Step 1: Create a Free Supabase Project
+1. Go to **[https://supabase.com](https://supabase.com)** and create a new project.
+2. Go to **Project Settings** > **API** and copy:
+   - **Project URL** (e.g. `https://xyzcompany.supabase.co`)
+   - **`anon` `public` API Key** (e.g. `eyJhbGciOi...`)
+
+### Step 2: Create the Required Tables
+Open the **SQL Editor** in your Supabase Dashboard, paste the following SQL script, and click **Run**:
+
+```sql
+-- 1. Create Projects Table
+CREATE TABLE IF NOT EXISTS projects (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    category TEXT,
+    status TEXT DEFAULT 'Active',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 2. Create Work Logs Table
+CREATE TABLE IF NOT EXISTS work_logs (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    action_summary TEXT NOT NULL,
+    tags TEXT,
+    source TEXT DEFAULT 'manual',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. Create Entities Table (for graph relations)
+CREATE TABLE IF NOT EXISTS entities (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(name, type)
+);
+
+-- 4. Create Graph Edges Table
+CREATE TABLE IF NOT EXISTS graph_edges (
+    id TEXT PRIMARY KEY,
+    source_id TEXT NOT NULL,
+    source_type TEXT NOT NULL,
+    target_id TEXT NOT NULL,
+    target_type TEXT NOT NULL,
+    relation_type TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 5. Enable Row Level Security (RLS) & Allow Access
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE work_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE entities ENABLE ROW LEVEL SECURITY;
+ALTER TABLE graph_edges ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read/write on projects" ON projects FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow public read/write on work_logs" ON work_logs FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow public read/write on entities" ON entities FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow public read/write on graph_edges" ON graph_edges FOR ALL USING (true) WITH CHECK (true);
+```
+
+### Step 3: Connect REMI to Supabase
+Run the setup wizard on your computer:
+```bash
+remi setup
+```
+1. Select **Cloud (Supabase - sync across devices)**.
+2. Enter your **Supabase Project URL**.
+3. Enter your **Supabase anon public API key**.
+
+Now, every time you run `remi log` or `remi sync`, your work history will automatically sync to your Supabase cloud database!
+
+---
+
 ## 🛡️ License & Links
 
 - **NPM Package:** [https://www.npmjs.com/package/zaarvy-remi](https://www.npmjs.com/package/zaarvy-remi)
