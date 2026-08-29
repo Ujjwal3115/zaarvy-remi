@@ -64,7 +64,7 @@ export async function syncCommand(options) {
       importedCount++;
     }
 
-    console.log(chalk.green(`\n✔ Successfully imported ${importedCount} past commit(s) for project "${repoName}"!`));
+    console.log(chalk.green(`\n[*] Imported ${importedCount} past commits to project "${repoName}" in REMI!\n`));
     console.log(chalk.gray(`Run "zaarvy-remi graph" to view your updated work graph.`));
 
   } catch (error) {

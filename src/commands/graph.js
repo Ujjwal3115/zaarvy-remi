@@ -29,7 +29,7 @@ export async function graphCommand() {
     const outputPath = path.join(os.homedir(), '.remi', 'output_graph.html');
     await fs.writeFile(outputPath, html);
 
-    console.log(chalk.green(`✔ Uncluttered Knowledge Graph generated at ${outputPath}`));
+    console.log(chalk.green(`\n[*] Uncluttered Knowledge Graph generated at ${outputPath}\n`));
     
     let startCmd = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
     exec(`${startCmd} "" "${outputPath}"`);

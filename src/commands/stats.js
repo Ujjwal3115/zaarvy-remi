@@ -58,13 +58,13 @@ export async function statsCommand() {
     // Print Header & Banner
     printCommandBanner('DEVELOPER STATS & STREAK DASHBOARD', MASCOT.stats);
 
-    console.log(`  ${chalk.red.bold('🔥 Current Streak:')} ${chalk.green.bold(streak + ' Days')}`);
-    console.log(`  ${chalk.cyan('📊 Total Work Logs:')} ${chalk.white.bold(totalLogs)}`);
-    console.log(`  ${chalk.magenta('📁 Projects Tracked:')} ${chalk.white.bold(totalProjects)}`);
-    console.log(`  ${chalk.blue('📅 Active Logging Days:')} ${chalk.white.bold(Object.keys(dateCounts).length)}\n`);
+    console.log(`  ${chalk.red.bold('Current Streak:')} ${chalk.green.bold(streak + ' Days')}`);
+    console.log(`  ${chalk.cyan('Total Work Logs:')} ${chalk.white.bold(totalLogs)}`);
+    console.log(`  ${chalk.magenta('Projects Tracked:')} ${chalk.white.bold(totalProjects)}`);
+    console.log(`  ${chalk.blue('Active Logging Days:')} ${chalk.white.bold(Object.keys(dateCounts).length)}\n`);
 
     // Top 5 Technologies
-    console.log(chalk.cyan.bold(`💻 Top Technologies & Topics:`));
+    console.log(chalk.cyan.bold(`Top Technologies & Topics:`));
     const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
     if (sortedTags.length === 0) {
@@ -80,7 +80,7 @@ export async function statsCommand() {
     console.log('');
 
     // ASCII 30-Day Activity Matrix Heatmap
-    console.log(chalk.magenta.bold(`🗓 30-Day Activity Heatmap:`));
+    console.log(chalk.magenta.bold(`30-Day Activity Heatmap:`));
     const heatmap = [];
     for (let i = 29; i >= 0; i--) {
       const d = new Date(today.getTime() - i * 86400000);

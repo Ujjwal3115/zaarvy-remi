@@ -17,22 +17,22 @@ export const BRAND = {
 
 // 2D ASCII Mascot - "Zaarvy Bot"
 export const MASCOT = {
-  idle: `(⚡_⚡)`,
-  thinking: `(⚙️_⚙️)`,
-  success: `(🟢_🟢)`,
-  searching: `(🔍_🔍)`,
-  stats: `(📊_📊)`,
-  standup: `(🚀_🚀)`,
+  idle: `[--]`,
+  thinking: `[..]`,
+  success: `[OK]`,
+  searching: `[>>]`,
+  stats: `[##]`,
+  standup: `[^^]`,
 };
 
 // Animated Mascot Frames for real-time motion
 export const ANIMATED_MASCOT_FRAMES = [
-  '(⚡_⚡)',
-  '(o_o )',
-  '( ⚡_⚡)',
-  '( -_-)',
-  '( ✨_✨)',
-  '( ⚙️_⚙️)',
+  '[--]',
+  '[..]',
+  '[--]',
+  '[..]',
+  '[--]',
+  '[..]',
 ];
 
 export function startMascotSpinner(text = 'Processing...') {

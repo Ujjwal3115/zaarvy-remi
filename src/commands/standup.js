@@ -26,7 +26,7 @@ export async function standupCommand(options) {
     }
 
     for (const [proj, projLogs] of Object.entries(byProject)) {
-      console.log(chalk.yellow.bold(`📌 Project: ${proj}`));
+      console.log(chalk.yellow.bold(`Project: ${proj}`));
       console.log(chalk.gray(`   Total Accomplishments: ${projLogs.length}`));
       console.log(chalk.green(`   Done / Completed:`));
 
@@ -37,11 +37,11 @@ export async function standupCommand(options) {
       console.log('');
     }
 
-    console.log(chalk.cyan(`🎯 Next Steps:`));
+    console.log(chalk.cyan(`Next Steps:`));
     console.log(`   • Continue feature development and testing.`);
     console.log(`   • Review open pull requests and feedback.\n`);
 
-    console.log(chalk.red(`🛑 Blockers:`));
+    console.log(chalk.red(`Blockers:`));
     console.log(`   • None reported.\n`);
 
     console.log(chalk.gray(`Report generated cleanly from REMI memory.`));

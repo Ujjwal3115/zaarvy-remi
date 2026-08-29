@@ -40,7 +40,7 @@ zaarvy-remi log -p "${repoName}" -m "Committed: $SUBJECT" -t "git"
     // 0o755 makes the script executable
     await fs.writeFile(hookPath, hookContent, { mode: 0o755 });
     
-    console.log(chalk.green(`✔ Git post-commit hook successfully installed!`));
+    console.log(chalk.green(`[*] Git post-commit hook successfully installed!`));
     console.log(chalk.gray(`Whenever you commit in this repo, it will automatically log to project "${repoName}" in REMI.`));
 
   } catch (error) {

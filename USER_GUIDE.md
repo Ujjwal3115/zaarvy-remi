@@ -1,11 +1,11 @@
-# 🚀 Zaarvy REMI: Complete Tester Guide & Product Documentation
+# [REMI] Zaarvy REMI: Complete Tester Guide & Product Documentation
 
 > **Autonomous Project Memory & Interactive Work Graph CLI**  
 > *Track work history, auto-sync Git commits, generate instant AI standups, and visualize your developer knowledge graph.*
 
 ---
 
-## 🌟 What is REMI?
+## [--] What is REMI?
 
 **REMI** (*Recursive Engineering Memory Interface*) is a developer tool designed to solve a universal developer problem: **"What did I actually build yesterday, last week, or 3 months ago?"**
 
@@ -17,7 +17,7 @@ Instead of manually maintaining boring work logs, trying to remember what you co
 
 ---
 
-## ⚡ 1. Quick Installation Guide (All Platforms)
+## [>>] 1. Quick Installation Guide (All Platforms)
 
 ### For Windows:
 ```bash
@@ -39,7 +39,7 @@ npx zaarvy-remi setup
 
 ---
 
-## 🛠️ 2. First-Time Setup (30 Seconds)
+## [##] 2. First-Time Setup (30 Seconds)
 
 Run the interactive setup wizard:
 ```bash
@@ -55,11 +55,11 @@ You will be asked two quick questions:
 
 ---
 
-## 🧪 3. Core Features & How to Test Each One
+## [**] 3. Core Features & How to Test Each One
 
 Here is a step-by-step test walkthrough of all the features:
 
-### 🔹 Test 1: Log Your Work (`remi log`)
+### [--] Test 1: Log Your Work (`remi log`)
 
 You can log work in two ways:
 
@@ -79,7 +79,7 @@ remi log -p "Zaarvy Engine" -m "Added SQLite FTS5 search index" -t "db, sqlite, 
 
 ---
 
-### 🔹 Test 2: Auto-Sync Past Git Commits (`remi sync`)
+### [--] Test 2: Auto-Sync Past Git Commits (`remi sync`)
 
 Open any existing Git repository in your terminal and run:
 ```bash
@@ -91,7 +91,7 @@ remi sync
 
 ---
 
-### 🔹 Test 3: Interactive Visual Knowledge Graph (`remi graph`)
+### [--] Test 3: Interactive Visual Knowledge Graph (`remi graph`)
 
 Run:
 ```bash
@@ -99,14 +99,14 @@ remi graph
 ```
 - Opens a **D3 force-directed visual knowledge graph** in your web browser.
 - **Features to try:**
-  - 🎨 **Light / Dark Mode Toggle** (Bottom-left sun/moon button).
-  - 🔍 **Zoom & Pan Controls** (`+`, `-`, reset).
-  - 📌 **Click on any Project / Tech / Contributor Node** to slide open the detail sidebar showing recent accomplishments and timestamps.
-  - 🖱️ **Drag & physics forces** to interact with nodes.
+  - [*] **Light / Dark Mode Toggle** (Bottom-left sun/moon button).
+  - [*] **Zoom & Pan Controls** (`+`, `-`, reset).
+  - [*] **Click on any Project / Tech / Contributor Node** to slide open the detail sidebar showing recent accomplishments and timestamps.
+  - [*] **Drag & physics forces** to interact with nodes.
 
 ---
 
-### 🔹 Test 4: Generate Standup Reports (`remi standup`)
+### [--] Test 4: Generate Standup Reports (`remi standup`)
 
 When it's time for team standup or updating your manager:
 ```bash
@@ -123,21 +123,21 @@ Outputs a clean, bulleted report with accomplishments, next steps, and blockers 
 
 ---
 
-### 🔹 Test 5: Developer Streak & Stats Dashboard (`remi stats`)
+### [--] Test 5: Developer Streak & Stats Dashboard (`remi stats`)
 
 Run:
 ```bash
 remi stats
 ```
 Displays:
-- 🔥 **Active Coding Streak** (consecutive logging days).
-- 📊 **Total Work Logs & Projects Tracked**.
-- 💻 **Top Technologies Progress Bars** (e.g., React, Python, Docker).
-- 🗓 **30-Day Terminal Activity Heatmap** (`░ ▒ ▓ █`).
+- [*] **Active Coding Streak** (consecutive logging days).
+- [*] **Total Work Logs & Projects Tracked**.
+- [*] **Top Technologies Progress Bars** (e.g., React, Python, Docker).
+- [*] **30-Day Terminal Activity Heatmap** (`░ ▒ ▓ █`).
 
 ---
 
-### 🔹 Test 6: Lightning-Fast Full-Text Search (`remi search`)
+### [--] Test 6: Lightning-Fast Full-Text Search (`remi search`)
 
 Search through months of past work logs instantly:
 ```bash
@@ -148,7 +148,7 @@ remi search "database"
 
 ---
 
-### 🔹 Test 7: Background Desktop Reminders (`remi schedule`)
+### [--] Test 7: Background Desktop Reminders (`remi schedule`)
 
 Never forget to log your work:
 ```bash
@@ -164,7 +164,7 @@ remi schedule -m 2
 
 ---
 
-## 📋 4. Tester Feedback Questionnaire
+## [??] 4. Tester Feedback Questionnaire
 
 When sharing this with testers, ask them these 5 quick questions:
 
@@ -178,7 +178,7 @@ When sharing this with testers, ask them these 5 quick questions:
 
 ---
 
-## ☁️ 5. Setting Up Supabase Cloud Sync (Optional)
+## [++] 5. Setting Up Supabase Cloud Sync (Optional)
 
 If you or your team want to sync your project memory across multiple machines or team members, you can use **Supabase (PostgreSQL)** instead of local SQLite.
 
@@ -256,7 +256,7 @@ Now, every time you run `remi log` or `remi sync`, your work history will automa
 
 ---
 
-## 🛡️ License & Links
+## [//] License & Links
 
 - **NPM Package:** [https://www.npmjs.com/package/zaarvy-remi](https://www.npmjs.com/package/zaarvy-remi)
 - **GitHub Repository:** [https://github.com/Ujjwal3115/zaarvy-remi](https://github.com/Ujjwal3115/zaarvy-remi)

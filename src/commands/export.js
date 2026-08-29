@@ -27,7 +27,7 @@ export async function exportCommand(projectName) {
     const outputPath = path.join(process.cwd(), `${projectName.replace(/[^a-z0-9]/gi, '_')}_export.md`);
     await fs.writeFile(outputPath, markdown);
 
-    console.log(chalk.green(`✔ Exported ${logs.length} logs to ${outputPath}`));
+    console.log(chalk.green(`[*] Exported ${logs.length} logs to ${outputPath}`));
 
   } catch (error) {
     console.error(chalk.red('\n[Error]'), error.message);

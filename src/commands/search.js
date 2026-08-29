@@ -15,7 +15,7 @@ export async function searchCommand(query) {
       return;
     }
 
-    console.log(chalk.green(`\n✔ Found ${results.length} result(s) for "${query}":\n`));
+    console.log(chalk.green(`\n[*] Found ${results.length} result(s) for "${query}":\n`));
     
     for (const res of results) {
       console.log(chalk.cyan(`[Project: ${res.project_name}] `) + chalk.white(res.action_summary));

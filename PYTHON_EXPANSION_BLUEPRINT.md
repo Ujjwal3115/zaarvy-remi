@@ -1,10 +1,10 @@
-# 🐍 Zaarvy REMI: Python & PyPI Expansion Blueprint
+#  Zaarvy REMI: Python & PyPI Expansion Blueprint
 
 This document is the complete technical architecture and implementation roadmap for creating the native Python version of **`zaarvy-remi`** (`zaarvy-remi` on PyPI).
 
 ---
 
-## 🎯 High-Level Vision & Objectives
+##  High-Level Vision & Objectives
 
 1. **Dual Interface**:
    - **CLI Tool:** Direct drop-in terminal replacement for `remi` built with Python (`Typer` + `Rich`).
@@ -20,7 +20,7 @@ This document is the complete technical architecture and implementation roadmap 
 
 ---
 
-## 🏗️ Python Tech Stack Architecture
+## ️ Python Tech Stack Architecture
 
 | Component | Node.js Implementation | Python Implementation | Purpose |
 | :--- | :--- | :--- | :--- |
@@ -37,7 +37,7 @@ This document is the complete technical architecture and implementation roadmap 
 
 ---
 
-## 📁 Recommended Repository Structure (for Future Python Project)
+##  Recommended Repository Structure (for Future Python Project)
 
 ```text
 zaarvy-remi-python/
@@ -77,7 +77,7 @@ zaarvy-remi-python/
 
 ---
 
-## 💻 Code Blueprints & Examples
+##  Code Blueprints & Examples
 
 ### 1. `pyproject.toml` (Modern Packaging Specification)
 ```toml
@@ -170,7 +170,7 @@ def print_header(sub_title: str = "Autonomous Project Memory & Work Graph"):
 
 ---
 
-## 🚀 Publishing Steps to PyPI (Future Guide)
+##  Publishing Steps to PyPI (Future Guide)
 
 When you are ready to build and publish the Python package:
 
@@ -199,7 +199,7 @@ When you are ready to build and publish the Python package:
 
 ---
 
-## 📅 Suggested Implementation Phases for the Python Session
+##  Suggested Implementation Phases for the Python Session
 
 1. **Phase 1: Project Scaffolding & PyProject Setup** (Create `zaarvy-remi-python` repo).
 2. **Phase 2: Database Layer** (Direct read/write to `~/.remi/remi.db`).
