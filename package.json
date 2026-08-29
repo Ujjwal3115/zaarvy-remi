@@ -1,6 +1,6 @@
 {
   "name": "zaarvy-remi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Autonomous Project Memory & Interactive Work Graph CLI",
   "main": "bin/remi.js",
   "type": "module",

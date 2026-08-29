@@ -1,26 +1,16 @@
-import fs from 'fs/promises';
-import path from 'path';
-import os from 'os';
-import Database from 'better-sqlite3';
 import chalk from 'chalk';
-import { printCommandBanner, MASCOT, BRAND } from '../ui/brand.js';
+import { printCommandBanner, MASCOT } from '../ui/brand.js';
+import { fetchStatsData } from '../db/client.js';
 
 export async function statsCommand() {
   try {
-    const dbPath = path.join(os.homedir(), '.remi', 'remi.db');
-    const db = new Database(dbPath);
-
-    const totalLogs = db.prepare('SELECT COUNT(*) as count FROM work_logs').get().count;
-    const totalProjects = db.prepare('SELECT COUNT(*) as count FROM projects').get().count;
+    const { totalLogs, totalProjects, logs } = await fetchStatsData();
 
     if (totalLogs === 0) {
       console.log(chalk.yellow('\nNo activity recorded in REMI memory yet.'));
-      console.log(chalk.gray('Use "zaarvy-remi log" or "zaarvy-remi sync" to start recording stats.'));
+      console.log(chalk.gray('Use "remi log" or "remi sync" to start recording stats.'));
       return;
     }
-
-    // Get all log dates (YYYY-MM-DD)
-    const logs = db.prepare(`SELECT created_at, tags FROM work_logs ORDER BY created_at DESC`).all();
 
     const dateCounts = {};
     const tagCounts = {};

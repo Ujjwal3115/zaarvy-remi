@@ -1,8 +1,5 @@
-import fs from 'fs/promises';
-import path from 'path';
-import os from 'os';
-import Database from 'better-sqlite3';
 import chalk from 'chalk';
+import { searchWorkLogs } from '../db/client.js';
 
 export async function searchCommand(query) {
   try {
@@ -11,30 +8,7 @@ export async function searchCommand(query) {
       process.exit(1);
     }
 
-    const configPath = path.join(os.homedir(), '.remi', 'config.json');
-    const configData = await fs.readFile(configPath, 'utf8');
-    const config = JSON.parse(configData);
-
-    if (config.dbType === 'supabase') {
-      console.log(chalk.yellow('Search currently queries the local SQLite cache. Remote Supabase search coming soon!'));
-    }
-
-    const dbPath = path.join(os.homedir(), '.remi', 'remi.db');
-    const db = new Database(dbPath);
-
-    // Using FTS5 match query
-    const stmt = db.prepare(`
-      SELECT log_id, action_summary, tags, project_name 
-      FROM work_logs_fts 
-      WHERE work_logs_fts MATCH ? 
-      ORDER BY rank
-      LIMIT 20
-    `);
-    
-    // Replace spaces with AND for robust wildcard searching
-    const ftsQuery = query.split(' ').filter(Boolean).map(t => `"${t}"*`).join(' AND ');
-    
-    const results = stmt.all(ftsQuery);
+    const results = await searchWorkLogs(query);
 
     if (results.length === 0) {
       console.log(chalk.gray(`No results found for "${query}"`));
