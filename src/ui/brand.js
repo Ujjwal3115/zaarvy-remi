@@ -73,18 +73,39 @@ export function startMascotSpinner(text = 'Processing...') {
   };
 }
 
-// Render 3D Block-Art Logo Header (Claude Code Style)
+// Render 3D Block-Art Logo Header with Retro Pixel Mascot
 export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph') {
+  const neon = chalk.hex('#00FF41').bold;
   const lime = BRAND.yellowBold;
   const dim = BRAND.dim;
 
-  console.log(lime(`\n██████╗ ███████╗███╗   ███╗██╗`));
-  console.log(lime(`██╔══██╗██╔════╝████╗ ████║██║`));
-  console.log(lime(`██████╔╝█████╗  ██╔████╔██║██║`));
-  console.log(lime(`██╔══██╗██╔══╝  ██║╚██╔╝██║██║`));
-  console.log(lime(`██║  ██║███████╗██║ ╚═╝ ██║██║`));
-  console.log(lime(`╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝`));
-  
+  const mascot = [
+    '  ██              ██  ',
+    '  ██    ██████    ██  ',
+    '  ██████████████████  ',
+    '  ████  ██████  ████  ',
+    '  ██████████████████  ',
+    '    ██████████████    ',
+    '    ██          ██    ',
+    '    ██          ██    '
+  ];
+
+  const remi = [
+    '██████╗ ███████╗███╗   ███╗██╗',
+    '██╔══██╗██╔════╝████╗ ████║██║',
+    '██████╔╝█████╗  ██╔████╔██║██║',
+    '██╔══██╗██╔══╝  ██║╚██╔╝██║██║',
+    '██║  ██║███████╗██║ ╚═╝ ██║██║',
+    '╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝',
+    '',
+    ''
+  ];
+
+  console.log('');
+  for (let i = 0; i < 8; i++) {
+    console.log(neon(mascot[i]) + '  ' + lime(remi[i]));
+  }
+
   console.log(`\n  ` + BRAND.badge('v1.0.0') + ` ` + chalk.bold.white('REMI CLI') + dim(` • ${subTitle}`));
   console.log(dim(`  A Zaarvy Ecosystem Package\n`));
 }
