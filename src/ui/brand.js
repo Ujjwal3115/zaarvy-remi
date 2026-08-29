@@ -1,3 +1,4 @@
+import fs from 'fs';
 import chalk from 'chalk';
 import readline from 'readline';
 
@@ -105,7 +106,14 @@ export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph')
     console.log(lime(remi[i] + '    ' + mascot[i]));
   }
 
-  console.log(`\n  ` + BRAND.badge('v1.0.0') + ` ` + chalk.bold.white('REMI CLI') + dim(` • ${subTitle}`));
+  let version = '1.0.1';
+  try {
+    const pkgPath = new URL('../../package.json', import.meta.url);
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    version = pkg.version;
+  } catch (e) {}
+
+  console.log(`\n  ` + BRAND.badge(`v${version}`) + ` ` + chalk.bold.white('REMI CLI') + dim(` • ${subTitle}`));
   console.log(dim(`  A Zaarvy Ecosystem Package\n`));
 }
 

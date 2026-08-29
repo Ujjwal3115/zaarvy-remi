@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+import fs from 'fs';
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { printHeader } from '../src/ui/brand.js';
@@ -14,6 +14,13 @@ import { syncCommand } from '../src/commands/sync.js';
 import { standupCommand } from '../src/commands/standup.js';
 import { statsCommand } from '../src/commands/stats.js';
 
+let version = '1.0.1';
+try {
+  const pkgPath = new URL('../package.json', import.meta.url);
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+  version = pkg.version;
+} catch (e) {}
+
 const program = new Command();
 
 printHeader();
@@ -21,7 +28,7 @@ printHeader();
 program
   .name('zaarvy-remi')
   .description('REMI: Autonomous Project Memory & Work Graph CLI')
-  .version('1.0.0');
+  .version(version);
 
 // setup
 program

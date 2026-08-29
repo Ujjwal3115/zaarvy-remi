@@ -5,8 +5,8 @@
   "main": "bin/remi.js",
   "type": "module",
   "bin": {
-    "zaarvy-remi": "./bin/remi.js",
-    "remi": "./bin/remi.js"
+    "zaarvy-remi": "bin/remi.js",
+    "remi": "bin/remi.js"
   },
   "files": [
     "bin",
@@ -36,7 +36,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ujjwal3115/zaarvy-remi.git"
+    "url": "git+https://github.com/Ujjwal3115/zaarvy-remi.git"
   },
   "bugs": {
     "url": "https://github.com/Ujjwal3115/zaarvy-remi/issues"
