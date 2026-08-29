@@ -73,22 +73,10 @@ export function startMascotSpinner(text = 'Processing...') {
   };
 }
 
-// Render 3D Block-Art Logo Header with Retro Pixel Mascot
+// Render 3D Block-Art Logo Header with Retro Pixel Mascot on the Right
 export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph') {
-  const neon = chalk.hex('#00FF41').bold;
   const lime = BRAND.yellowBold;
   const dim = BRAND.dim;
-
-  const mascot = [
-    '  ██              ██  ',
-    '  ██    ██████    ██  ',
-    '  ██████████████████  ',
-    '  ████  ██████  ████  ',
-    '  ██████████████████  ',
-    '    ██████████████    ',
-    '    ██          ██    ',
-    '    ██          ██    '
-  ];
 
   const remi = [
     '██████╗ ███████╗███╗   ███╗██╗',
@@ -97,13 +85,24 @@ export function printHeader(subTitle = 'Autonomous Project Memory & Work Graph')
     '██╔══██╗██╔══╝  ██║╚██╔╝██║██║',
     '██║  ██║███████╗██║ ╚═╝ ██║██║',
     '╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝',
-    '',
-    ''
+    '                              ',
+    '                              '
+  ];
+
+  const mascot = [
+    '  ██              ██',
+    '  ██    ██████    ██',
+    '  ██████████████████',
+    '  ████  ██████  ████',
+    '  ██████████████████',
+    '    ██████████████  ',
+    '    ██          ██  ',
+    '    ██          ██  '
   ];
 
   console.log('');
   for (let i = 0; i < 8; i++) {
-    console.log(neon(mascot[i]) + '  ' + lime(remi[i]));
+    console.log(lime(remi[i] + '    ' + mascot[i]));
   }
 
   console.log(`\n  ` + BRAND.badge('v1.0.0') + ` ` + chalk.bold.white('REMI CLI') + dim(` • ${subTitle}`));
