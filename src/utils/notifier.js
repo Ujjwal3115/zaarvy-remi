@@ -16,6 +16,9 @@ export function sendNotification({ title = 'REMI: Project Memory', message, icon
     const iconXml = icon ? `<image placement="appLogoOverride" src="${icon.replace(/\\/g, '/')}" />` : '';
     const psScript = `
 [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+[Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
+
+$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
 $template = @"
 <toast duration="short">
     <visual>
@@ -28,7 +31,6 @@ $template = @"
     <audio src="ms-winsoundevent:Notification.Default" />
 </toast>
 "@
-$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
 $xml.LoadXml($template)
 $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
 $appId = '{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\WindowsPowerShell\\v1.0\\powershell.exe'
@@ -40,7 +42,23 @@ try {
 `;
 
     const encoded = Buffer.from(psScript, 'utf16le').toString('base64');
-    exec(`powershell -NoProfile -ExecutionPolicy Bypass -EncodedCommand ${encoded}`, () => {});
+    exec(`powershell -NoProfile -ExecutionPolicy Bypass -EncodedCommand ${encoded}`, (err, stdout, stderr) => {
+      if (err) {
+        // Fallback to legacy Windows forms balloon tooltip if WinRT is disabled on older systems
+        const fallbackScript = `
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+$objNotifyIcon = New-Object System.Windows.Forms.NotifyIcon
+$objNotifyIcon.Icon = [System.Drawing.SystemIcons]::Information
+$objNotifyIcon.BalloonTipIcon = "Info"
+$objNotifyIcon.BalloonTipText = "${cleanMessage}"
+$objNotifyIcon.BalloonTipTitle = "${cleanTitle}"
+$objNotifyIcon.Visible = $True
+$objNotifyIcon.ShowBalloonTip(10000)
+`;
+        const fbEncoded = Buffer.from(fallbackScript, 'utf16le').toString('base64');
+        exec(`powershell -NoProfile -ExecutionPolicy Bypass -EncodedCommand ${fbEncoded}`);
+      }
+    });
 
   } else if (process.platform === 'darwin') {
     const osascript = `display notification "${cleanMessage}" with title "${cleanTitle}"`;
