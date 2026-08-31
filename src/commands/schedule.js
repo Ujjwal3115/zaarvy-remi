@@ -3,10 +3,10 @@ import path from 'path';
 import os from 'os';
 import Database from 'better-sqlite3';
 import chalk from 'chalk';
-import notifier from 'node-notifier';
 import { fork } from 'child_process';
 import { fileURLToPath } from 'url';
 import { printSuccess, printInfo, MASCOT, BRAND } from '../ui/brand.js';
+import { sendNotification } from '../utils/notifier.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,16 +17,12 @@ export async function scheduleCommand(rawMessage, options = {}) {
     // Instant Notification Test
     if (options.test || options.now) {
       console.log(chalk.gray(`${MASCOT.thinking} Triggering instant desktop notification...`));
-      notifier.notify({
+      sendNotification({
         title: 'REMI: Project Memory',
-        message: rawMessage || 'Test Notification: REMI desktop reminders are working perfectly!',
-        icon: logoPath,
-        contentImage: logoPath,
-        appID: 'Zaarvy REMI',
-        sound: true,
-        wait: false
+        message: rawMessage || 'Test Notification: REMI desktop reminders are working cleanly!',
+        icon: logoPath
       });
-      printSuccess('Test notification sent! Check your Windows notification banner in the bottom-right corner.');
+      printSuccess('Test notification sent! Check your desktop notification center.');
       return;
     }
 
@@ -58,7 +54,7 @@ export async function scheduleCommand(rawMessage, options = {}) {
       child.unref(); // Detach completely so CLI exits immediately
 
       printSuccess(`REMI background daemon started! (Runs every ${timeLabel})`);
-      console.log(chalk.gray(`  • This background process runs independently in Windows.`));
+      console.log(chalk.gray(`  • This background process runs independently in the background.`));
       console.log(chalk.gray(`  • It will send native notifications even if your terminal or IDE is closed.`));
       console.log(chalk.gray(`  • Tip: To test notification immediately, run: `) + BRAND.yellow('remi schedule --test'));
       return;
@@ -92,14 +88,10 @@ if (process.env.REMI_DAEMON === 'true') {
       }
 
       if (shouldRemind) {
-        notifier.notify({
+        sendNotification({
           title: 'REMI: Project Memory',
           message: customMessage,
-          icon: logoPath,
-          contentImage: logoPath,
-          appID: 'Zaarvy REMI',
-          sound: true,
-          wait: false
+          icon: logoPath
         });
       }
       
