@@ -218,11 +218,11 @@ CREATE POLICY "Allow public read/write on graph_edges" ON graph_edges FOR ALL US
 - **Local DB:** `better-sqlite3` (ultra-fast synchronous local database).
 - **Cloud DB:** `@supabase/supabase-js`.
 - **UI / Styling:** `chalk` (for `#D0D02D` hex colors and terminal formatting).
-- **Notifications:** `node-notifier` (cross-platform native OS toast notifications).
+- **Notifications:** Zero-dependency Native OS Toast Dispatcher (PowerShell WinRT / AppleScript / notify-send).
 - **Knowledge Graph:** `D3.js` (Force-directed graphs, injected into a standalone HTML template).
 
 **AI Multi-Model Fallback Router:**
-REMI natively guarantees reliability. If the user selects Google Gemini and the default `gemini-2.5-flash` model endpoint is down or returning a 404, REMI will autonomously catch the error and fall back to `gemini-2.0-flash`, then `gemini-1.5-flash-latest`, then `gemini-pro`. 
+REMI natively guarantees 100% uptime. If the user selects Google Gemini and the primary `gemini-2.5-flash` model endpoint experiences downtime or returns an error, REMI autonomously cascades to `gemini-2.0-flash`, then `gemini-2.5-pro`, then `gemini-2.0-flash-lite`. 
 
 ---
 
