@@ -247,7 +247,7 @@ export async function fetchStatsData() {
 
     const { data: logs, count: totalLogs, error: lErr } = await supabaseClient
       .from('work_logs')
-      .select('created_at, tags', { count: 'exact' })
+      .select('created_at, tags, projects ( name )', { count: 'exact' })
       .order('created_at', { ascending: false });
 
     if (lErr) throw new Error(`Supabase Stats Error: ${lErr.message}`);
@@ -255,12 +255,21 @@ export async function fetchStatsData() {
     return {
       totalLogs: totalLogs || 0,
       totalProjects: totalProjects || 0,
-      logs: logs || []
+      logs: (logs || []).map(l => ({
+        created_at: l.created_at,
+        tags: l.tags,
+        project_name: l.projects?.name || 'General'
+      }))
     };
   } else {
     const totalLogs = sqliteDb.prepare('SELECT COUNT(*) as count FROM work_logs').get().count;
     const totalProjects = sqliteDb.prepare('SELECT COUNT(*) as count FROM projects').get().count;
-    const logs = sqliteDb.prepare(`SELECT created_at, tags FROM work_logs ORDER BY created_at DESC`).all();
+    const logs = sqliteDb.prepare(`
+      SELECT w.created_at, w.tags, p.name as project_name 
+      FROM work_logs w 
+      LEFT JOIN projects p ON w.project_id = p.id 
+      ORDER BY w.created_at DESC
+    `).all();
 
     return { totalLogs, totalProjects, logs };
   }
