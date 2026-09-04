@@ -24,9 +24,6 @@
 
 <img src="docs_assets/emotions-animation.gif" alt="REMI Autonomous Mascot" width="220" />
 
-<p>
-  <sub><b>REMI Autonomous Mascot</b> • <a href="docs_assets/emotions-animation.mp4">Watch HD Video (MP4)</a></sub>
-</p>
 
 </div>
 
