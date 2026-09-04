@@ -8,33 +8,46 @@
 ██║  ██║███████╗██║ ╚═╝ ██║██║
 ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝
 
-   v1.0.0  REMI CLI • Autonomous Project Memory & Work Graph
+   v1.0.5  REMI CLI • Autonomous Project Memory & Work Graph
   A Zaarvy Ecosystem Package
 ```
 
 **Track work history, auto-sync Git commits, generate AI standup reports, and visualize your project knowledge graph.**
 
+[![Official Docs](https://img.shields.io/badge/Docs-zaarvy.in%2Fpackages%2Fremi-brightgreen)](https://zaarvy.in/packages/remi)
+[![NPM Version](https://img.shields.io/npm/v/zaarvy-remi?color=%23D0D02D)](https://www.npmjs.com/package/zaarvy-remi)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Zaarvy Ecosystem](https://img.shields.io/badge/A_Zaarvy_Package-%23D0D02D)](https://zaarvy.in)
+
+<br /><br />
+
+<a href="https://zaarvy.in/packages/remi">
+  <img src="https://raw.githubusercontent.com/Ujjwal3115/zaarvy-remi/main/docs_assets/emotions-animation.gif" alt="REMI Autonomous Mascot" width="220" />
+</a>
+
+<p>
+  <sub><b>REMI Autonomous Mascot</b> • <a href="https://raw.githubusercontent.com/Ujjwal3115/zaarvy-remi/main/docs_assets/emotions-animation.mp4">Watch HD Clip (MP4)</a></sub>
+</p>
+
 </div>
 
 ---
 
-##  Key Features
+## Key Features
 
-- ** Dual-Mode Logging (`zaarvy-remi log`):** Log work using natural language parsed by AI (Ollama / Gemini / Groq / OpenAI / Anthropic) or strict flags (`-p`, `-m`, `-t`).
-- **️ Glassmorphic Knowledge Graph (`zaarvy-remi graph`):** Interactive D3 force-directed visual graph showing connections between **Projects**, **Tech Stacks**, and **Contributors**. Features **Light & Dark themes**, canvas zoom controls, and a slide-out detail panel!
-- ** Smart Git Sync (`zaarvy-remi sync`):** Automatically parse and import past repository commits, extracting meaningful tech tags (`React`, `SQLite`, `Ollama`, `API`) and author handles.
-- ** AI Standup Generator (`zaarvy-remi standup`):** Instant Daily/Weekly status report generator for Slack, Discord, or team meetings.
-- ** Developer Dashboard (`zaarvy-remi stats`):** Terminal coding streak counter, top tech progress bars, and 30-day ASCII activity heatmap.
-- ** Full-Text Search (`zaarvy-remi search`):** Fast local SQLite FTS5 search across all past project logs.
-- ** Dual Backend Storage:** Choose between **Local SQLite** (default) or **Cloud Supabase** database.
-- ** Proactive Desktop Reminders (`zaarvy-remi schedule`):** Silent background daemon that alerts you if you forget to log work.
-- ** Beautiful TUI Dashboard:** Seamless CLI experience with animated progress states, responsive block-art headers, and signature Zaarvy formatting!
+- **Dual-Mode Logging (`zaarvy-remi log`):** Log work using natural language parsed by AI (Ollama / Gemini / Groq / OpenAI / Anthropic) or strict flags (`-p`, `-m`, `-t`).
+- **Glassmorphic Knowledge Graph (`zaarvy-remi graph`):** Interactive D3 force-directed visual graph showing connections between **Projects**, **Tech Stacks**, and **Contributors**. Features **Light & Dark themes**, canvas zoom controls, and a slide-out detail panel.
+- **Smart Git Sync (`zaarvy-remi sync`):** Automatically parse and import past repository commits, extracting meaningful tech tags (`React`, `SQLite`, `Ollama`, `API`) and author handles.
+- **AI Standup Generator (`zaarvy-remi standup`):** Instant Daily/Weekly status report generator for Slack, Discord, or team meetings.
+- **Developer Stats Dashboard (`zaarvy-remi stats`):** Terminal coding streak counter, top tech progress bars, and 30-day ASCII activity heatmap.
+- **Full-Text Search (`zaarvy-remi search`):** Fast local SQLite FTS5 search across all past project logs.
+- **Dual Backend Storage:** Choose between **Local SQLite** (default) or **Cloud Supabase** database.
+- **Proactive Desktop Reminders (`zaarvy-remi schedule`):** Silent background daemon that alerts you if you forget to log work.
+- **Developer-First TUI:** Seamless CLI experience with animated progress states, responsive block-art headers, and signature Zaarvy formatting.
 
 ---
 
-##  Installation & Setup
+## Installation & Setup
 
 ### Install globally via NPM
 ```bash
@@ -49,7 +62,7 @@ zaarvy-remi setup
 
 ---
 
-##  Usage & Commands
+## Usage & Commands
 
 | Command | Description |
 | :--- | :--- |
@@ -60,22 +73,28 @@ zaarvy-remi setup
 | `zaarvy-remi sync --limit 50` | Import past Git commits into REMI memory. |
 | `zaarvy-remi standup --days 7` | Generate a Daily or Weekly Standup report. |
 | `zaarvy-remi stats` | View active coding streak, top tech stats & ASCII heatmap. |
+| `zaarvy-remi schedule` | Run background reminder daemon. |
+| `zaarvy-remi schedule --test` | Test cross-platform desktop notification toast. |
 | `zaarvy-remi search "auth"` | Full-Text Search across all past work logs. |
 | `zaarvy-remi export -p "My Project"` | Export project log history to Markdown. |
 | `zaarvy-remi hook install` | Install Git `post-commit` auto-logging hook in current repo. |
 
 ---
 
-## ️ Technical Architecture
+## Technical Architecture
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Ujjwal3115/zaarvy-remi/main/docs_assets/remi-architecture-diagram.png" alt="REMI Architecture" width="700" />
+</div>
 
 REMI is built entirely around developer workflow speed:
 - **TUI & Command Parsing:** Commander.js, Inquirer.js, Chalk for responsive, glowing 2D pixel-art terminals.
-- **AI Router Engine:** LangChain orchestration supporting local LLMs (Ollama) to cloud APIs (Gemini, Groq, OpenAI).
+- **AI Router Engine:** Multi-provider fallback router supporting local LLMs (Ollama) to modern cloud APIs (Gemini 2.5 Flash, Groq, OpenAI).
 - **Data Layer:** `better-sqlite3` with Full-Text Search 5 (FTS5) for blazing fast local searches, and `@supabase/supabase-js` for optional cloud syncing.
 - **Interactive Visuals:** D3.js v7 for force-directed web visualizations spawned locally.
 
 ---
 
-## ️ License
+## License
 
-[MIT](LICENSE)  [Zaarvy Ecosystem](https://zaarvy.in)
+[MIT](LICENSE) | [Zaarvy Ecosystem](https://zaarvy.in)
