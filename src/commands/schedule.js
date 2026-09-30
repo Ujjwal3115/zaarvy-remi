@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import Database from 'better-sqlite3';
+import { getDatabase } from '../db/sqlite.js';
 import chalk from 'chalk';
 import { fork } from 'child_process';
 import { fileURLToPath } from 'url';
@@ -73,6 +73,7 @@ if (process.env.REMI_DAEMON === 'true') {
   setInterval(() => {
     try {
       const dbPath = path.join(os.homedir(), '.remi', 'remi.db');
+      const Database = getDatabase();
       const db = new Database(dbPath);
       
       const lastLog = db.prepare('SELECT created_at FROM work_logs ORDER BY created_at DESC LIMIT 1').get();

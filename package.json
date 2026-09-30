@@ -42,13 +42,18 @@
   "bugs": {
     "url": "https://github.com/Ujjwal3115/zaarvy-remi/issues"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
-    "better-sqlite3": "^13.0.3",
     "chalk": "^6.0.0",
     "commander": "^15.0.0",
     "dotenv": "^17.4.2",
     "inquirer": "^14.2.0"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^13.0.3"
   },
   "devDependencies": {
     "eslint": "^10.9.1",

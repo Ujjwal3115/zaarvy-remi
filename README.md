@@ -39,6 +39,14 @@ Or run instantly without installing:
 npx zaarvy-remi --help
 ```
 
+### 💡 Node.js Requirements & Tips
+* **Recommended:** Node.js `>= 22.5.0` uses Node's **built-in native SQLite (`node:sqlite`)** with zero external C++ dependencies, zero compilation, and 100% cross-platform speed out-of-the-box.
+* **Node 18 / 20 LTS:** Supported automatically via prebuilt SQLite bindings.
+* **Windows Build Troubleshooting:** If you encounter build tool or permission issues on Windows, simply add `--ignore-scripts`:
+  ```bash
+  npm install -g zaarvy-remi --ignore-scripts
+  ```
+
 ---
 
 ## 🛠️ Core Remi Commands

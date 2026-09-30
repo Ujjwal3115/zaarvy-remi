@@ -2,7 +2,7 @@ import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import Database from 'better-sqlite3';
+import { getDatabase } from './sqlite.js';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
@@ -40,6 +40,7 @@ export async function initDB() {
       if (!fs.existsSync(dbDir)) {
         fs.mkdirSync(dbDir, { recursive: true });
       }
+      const Database = getDatabase();
       sqliteDb = new Database(dbPath);
       
       // Read and execute schema

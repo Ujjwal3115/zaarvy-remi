@@ -40,7 +40,7 @@ Developers constantly switch context, juggle multiple projects, and forget what 
 
 ### 1. Overview & Architecture
 **REMI** (Recursive Engineering Memory Interface) is a Node.js-based CLI application. 
-- **Local Mode:** Uses `better-sqlite3` with Full-Text Search (FTS5) for instant local querying.
+- **Local Mode:** Uses Node.js native built-in SQLite (`node:sqlite`) with Full-Text Search (FTS5) for zero-dependency local querying, with seamless fallback to `better-sqlite3` on older Node LTS releases.
 - **Cloud Mode:** Natively integrates with `@supabase/supabase-js` for real-time Postgres cloud syncing.
 - **AI Routing:** Features a robust `Multi-Model Fallback Router` (e.g., trying `gemini-2.5-flash`, then `gemini-2.0-flash`, etc.) to guarantee 100% uptime for AI parsing.
 - **Desktop Daemons:** Uses native OS APIs (`node-notifier`) to push background desktop reminders without keeping a heavy terminal window open.
@@ -61,6 +61,9 @@ npx zaarvy-remi setup
 ```
 
 > **Note:** Once installed, you can use the command `remi` or `zaarvy-remi` interchangeably.
+>
+> **Installation Tip:** Node.js `>= 22.5.0` is recommended for native zero-dependency SQLite. If you hit any C++ build tool errors on Windows, install using:
+> `npm install -g zaarvy-remi --ignore-scripts`
 
 ---
 

@@ -36,6 +36,11 @@ npx zaarvy-remi setup
 ```
 
 > **Note:** Once installed, you can type **`remi`** or **`zaarvy-remi`** interchangeably in your terminal!
+>
+> **Node Compatibility & Troubleshooting:**
+> - Node.js `>= 22.5.0` is recommended for zero-dependency native SQLite (`node:sqlite`).
+> - If you hit native compilation or permission errors on Windows, run:
+>   `npm install -g zaarvy-remi --ignore-scripts`
 
 ---
 
