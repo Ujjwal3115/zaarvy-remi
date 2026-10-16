@@ -13,8 +13,6 @@ export async function orbitCommand(directory = '.', options = {}) {
       process.exit(1);
     }
 
-    printHeader('3D Orbital Architecture & Dependency Visualizer');
-
     const port = options.port ? parseInt(options.port, 10) : 3333;
     const noOpen = options.open === false || options.noOpen === true;
 
