@@ -30,7 +30,13 @@
     "developer-tools",
     "sqlite-fts5",
     "zaarvy",
-    "zaarvy-remi"
+    "zaarvy-remi",
+    "orbit",
+    "zaarvy-arch",
+    "3d-architecture",
+    "dependency-visualizer",
+    "threejs",
+    "webgl"
   ],
   "author": "Ujjwal Verma <https://zaarvy.in>",
   "license": "MIT",

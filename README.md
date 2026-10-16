@@ -57,6 +57,7 @@ npx zaarvy-remi --help
 | `remi log "summary"` | Records an architectural decision using the multi-model AI routing cascade (or strict `-p` flag). |
 | `remi standup` | Generates formatted daily standup markdown reports ready for Slack, Jira, or LinkedIn. |
 | `remi graph` | Launches an interactive 2D D3 force-directed physics graph of your projects, git commits, and tech stacks. |
+| `remi orbit [dir]` | Launches the interactive 3D WebGL Orbital Architecture & Dependency Visualizer (alias: `remi arch`). |
 
 <div align="center">
   <img src="https://zaarvy.in/remi-graph-dark.png" alt="Zaarvy Remi Interactive 2D D3 Knowledge Graph" width="800" />

@@ -1,0 +1,2672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZAARVY-ARCH // 3D Orbital Architecture Visualizer</title>
+    <style>
+        :root {
+            --bg-deep: #020206;
+            --glass-bg: rgba(9, 11, 24, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-highlight: rgba(99, 102, 241, 0.45);
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --tier-entry: #fbbf24;
+            --tier-routes: #f43f5e;
+            --tier-components: #38bdf8;
+            --tier-services: #a855f7;
+            --tier-utils: #10b981;
+            --flow-upstream: #06b6d4;
+            --flow-downstream: #f59e0b;
+            --color-cycle: #ef4444;
+            --color-orphan: #c084fc;
+            --color-blast: #f97316;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-deep);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "JetBrains Mono", monospace, sans-serif;
+            color: var(--text-primary);
+        }
+
+        #canvas-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        /* =========================================================================
+           1. TOP APPLICATION NAVIGATION BAR (Unified & Non-Overlapping)
+           ========================================================================= */
+        .app-topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 52px;
+            z-index: 100;
+            background: rgba(8, 10, 22, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            gap: 12px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .brand-title {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            background: linear-gradient(90deg, #fff, #818cf8, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .project-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(99, 102, 241, 0.18);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #c7d2fe;
+            max-width: 130px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .topbar-stats {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-pill {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .stat-pill b {
+            color: #fff;
+            margin-left: 2px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: #818cf8;
+            transform: translateY(-1px);
+        }
+
+        .btn.active {
+            background: rgba(99, 102, 241, 0.35);
+            border-color: #818cf8;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 7px;
+            overflow: hidden;
+        }
+
+        .btn-group .btn {
+            border: none;
+            border-radius: 0;
+            padding: 6px 9px;
+            background: transparent;
+        }
+
+        .btn-group .btn:not(:last-child) {
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-group .btn:hover {
+            background: rgba(99, 102, 241, 0.25);
+            transform: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            box-shadow: 0 0 16px rgba(99, 102, 241, 0.6);
+        }
+
+        .select-custom {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #fff;
+            padding: 6px 8px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            max-width: 140px;
+        }
+
+        .select-custom:hover,
+        .select-custom:focus {
+            border-color: #818cf8;
+            background: rgba(10, 14, 32, 0.85);
+        }
+
+        /* =========================================================================
+           2. UNIFIED LEFT SIDEBAR (Explorer, Search, Utilities & Legend)
+           ========================================================================= */
+        .hud-sidebar {
+            position: fixed;
+            top: 64px;
+            left: 16px;
+            width: 320px;
+            bottom: 16px;
+            max-height: calc(100vh - 80px);
+            z-index: 90;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        .hud-sidebar.collapsed {
+            transform: translateX(-340px);
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .sidebar-header {
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-body {
+            padding: 12px 14px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-body::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        /* Sidebar toggle button (visible when sidebar collapsed) */
+        #btn-expand-sidebar {
+            position: fixed;
+            top: 64px;
+            left: 16px;
+            z-index: 85;
+            padding: 8px 11px;
+            border-radius: 8px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            display: none;
+        }
+
+        #btn-expand-sidebar.visible {
+            display: inline-flex;
+        }
+
+        /* Utility Toggles Row */
+        .utility-toggles-bar {
+            display: flex;
+            gap: 6px;
+        }
+
+        .util-toggle-btn {
+            flex: 1;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .util-toggle-btn:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .util-toggle-btn.active-cycles {
+            background: rgba(239, 68, 68, 0.22);
+            border-color: #ef4444;
+            color: #fca5a5;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+            animation: pulse-red 2s infinite ease-in-out;
+        }
+
+        .util-toggle-btn.active-orphans {
+            background: rgba(192, 132, 252, 0.22);
+            border-color: #c084fc;
+            color: #e9d5ff;
+            box-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
+        }
+
+        .util-toggle-btn.active-clusters {
+            background: rgba(56, 189, 248, 0.22);
+            border-color: #38bdf8;
+            color: #bae6fd;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { border-color: #ef4444; }
+            50% { border-color: #f87171; box-shadow: 0 0 14px rgba(239, 68, 68, 0.6); }
+        }
+
+        /* Tier Quick-Filter Pills */
+        .tier-filter-bar {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .tier-pill {
+            font-size: 9px;
+            font-weight: 600;
+            padding: 3px 6px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .tier-pill:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .tier-pill.active {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: #818cf8;
+            color: #fff;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Search Box */
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box-inner {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 7px;
+            padding: 8px 30px 8px 30px;
+            color: #fff;
+            font-size: 11px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .search-clear-btn {
+            position: absolute;
+            right: 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            padding: 3px;
+            line-height: 1;
+            display: none;
+        }
+
+        .search-clear-btn:hover {
+            color: #fff;
+        }
+
+        .search-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-top: 5px;
+            padding: 0 2px;
+        }
+
+        /* Search Results inside sidebar (In-Flow, NOT overlapping) */
+        .search-results-container {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .search-results-container.visible {
+            display: block;
+        }
+
+        .search-results-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .search-results-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .search-result-item {
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: background 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover,
+        .search-result-item.highlighted {
+            background: rgba(99, 102, 241, 0.22);
+        }
+
+        .result-shape-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+            width: 16px;
+            text-align: center;
+        }
+
+        .result-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .result-name-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .result-name-row mark {
+            background: rgba(99, 102, 241, 0.4);
+            color: #fff;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        .result-tier-badge {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        .result-path {
+            font-size: 9px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 1px;
+            font-family: monospace;
+        }
+
+        .result-stats-badge {
+            font-size: 9px;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 5px;
+            border-radius: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Collapsible Legend Card inside Sidebar */
+        .legend-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .legend-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .legend-title {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .legend-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #e2e8f0;
+            cursor: pointer;
+            padding: 3px 5px;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .legend-shape {
+            font-size: 12px;
+            width: 14px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .legend-shape-desc {
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-left: auto;
+            font-family: monospace;
+        }
+
+        .flow-legend-indicator {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 9px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 8px;
+            padding-top: 6px;
+        }
+
+        .flow-legend-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .flow-legend-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        /* =========================================================================
+           3. ACTIVE CYCLE NAVIGATOR BANNER (Centered, Unobstructed)
+           ========================================================================= */
+        .hud-cycle-banner {
+            position: fixed;
+            top: 64px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            background: rgba(20, 8, 12, 0.94);
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            box-shadow: 0 0 24px rgba(239, 68, 68, 0.35);
+            z-index: 95;
+        }
+
+        .hud-cycle-banner.visible {
+            display: flex;
+        }
+
+        .cycle-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #fca5a5;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cycle-path-preview {
+            font-size: 11px;
+            color: #fff;
+            font-family: monospace;
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* =========================================================================
+           4. NODE INSPECTOR PANEL & BLAST RADIUS IMPACT (Bottom Right)
+           ========================================================================= */
+        .hud-inspector {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            width: 340px;
+            max-width: calc(100vw - 32px);
+            max-height: calc(100vh - 84px);
+            padding: 16px;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            overflow-y: auto;
+            z-index: 90;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7);
+        }
+
+        .hud-inspector.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .hud-inspector::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .hud-inspector::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .inspector-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+
+        .inspector-title-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .inspector-shape-icon {
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .inspector-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            word-break: break-all;
+        }
+
+        .inspector-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px;
+            line-height: 1;
+        }
+
+        .inspector-close-btn:hover {
+            color: #fff;
+        }
+
+        .inspector-tier {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.6px;
+            flex-shrink: 0;
+        }
+
+        .inspector-path {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            word-break: break-all;
+            font-family: monospace;
+        }
+
+        /* Blast Radius Impact Card */
+        .blast-radius-card {
+            background: rgba(249, 115, 22, 0.12);
+            border: 1px solid rgba(249, 115, 22, 0.35);
+            border-radius: 7px;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+        }
+
+        .blast-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        .blast-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #fdba74;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .blast-badge {
+            font-size: 9px;
+            font-weight: 800;
+            background: #f97316;
+            color: #fff;
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .blast-desc {
+            font-size: 10px;
+            color: #fed7aa;
+            line-height: 1.35;
+        }
+
+        .inspector-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 8px;
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+        }
+
+        .stat-row span:last-child {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .flow-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 8px;
+            margin-top: 6px;
+        }
+
+        .flow-section-title {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .flow-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-height: 75px;
+            overflow-y: auto;
+        }
+
+        .flow-chip {
+            font-size: 9px;
+            font-family: monospace;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .flow-chip:hover {
+            border-color: #818cf8;
+            color: #fff;
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-chip.upstream {
+            border-left: 2px solid var(--flow-upstream);
+        }
+
+        .flow-chip.downstream {
+            border-left: 2px solid var(--flow-downstream);
+        }
+
+        .inspector-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 8px;
+        }
+
+        .inspector-actions .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 6px 8px;
+        }
+
+        /* Floating Tooltip */
+        #hover-tooltip {
+            position: absolute;
+            z-index: 120;
+            pointer-events: none;
+            background: rgba(6, 8, 20, 0.94);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 7px;
+            font-size: 11px;
+            color: #fff;
+            white-space: nowrap;
+            display: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75);
+            transform: translate(12px, 12px);
+        }
+
+        @media (max-width: 900px) {
+            .topbar-stats {
+                display: none;
+            }
+            .hud-sidebar {
+                width: 280px;
+            }
+            .hud-inspector {
+                width: 300px;
+            }
+        }
+    </style>
+
+    <!-- Three.js & OrbitControls via CDN -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+
+<body>
+    <div id="canvas-container"></div>
+    <div id="hover-tooltip"></div>
+
+    <!-- 1. UNIFIED APPLICATION TOPBAR -->
+    <header class="app-topbar">
+        <div class="topbar-left">
+            <div class="brand-title">✦ ZAARVY-ARCH</div>
+            <div class="project-badge" id="hud-project-name">project</div>
+            <div class="topbar-stats">
+                <span class="stat-pill">Files: <b id="hud-total-files">0</b></span>
+                <span class="stat-pill">Deps: <b id="hud-total-deps">0</b></span>
+                <span class="stat-pill">Clusters: <b id="hud-total-clusters">0</b></span>
+                <span class="stat-pill">Score: <b id="hud-complexity">0</b></span>
+            </div>
+        </div>
+
+        <div class="topbar-right">
+            <!-- Expand/Collapse Clusters Toggle -->
+            <button id="btn-toggle-all-clusters" class="btn" title="Expand or Collapse All 3D Clusters">
+                <span>⊞</span> Clusters
+            </button>
+
+            <!-- Node Shape Selector -->
+            <select id="select-shape-mode" class="select-custom" title="Change Node 3D Shapes">
+                <option value="polyhedra">✦ Tier Shapes</option>
+                <option value="cubes">▧ Tech Cubes</option>
+                <option value="hex">⬡ Hex Prisms</option>
+                <option value="spheres">● Spheres</option>
+            </select>
+
+            <!-- Flow Direction Selector -->
+            <select id="select-flow-mode" class="select-custom" title="Dependency Flow Direction">
+                <option value="imports">⇄ Imports</option>
+                <option value="data">⇄ Data Flow</option>
+            </select>
+
+            <!-- Flow Speed Toggle -->
+            <button id="btn-flow-speed" class="btn active" title="Toggle Flow Animation Speed">
+                <span>⚡</span> 1x
+            </button>
+
+            <!-- Auto-Orbit -->
+            <button id="btn-autorotate" class="btn active" title="Toggle Orbital Auto-Rotation">
+                <span>↻</span> Orbit
+            </button>
+
+            <!-- Zoom & Reset View Button Group -->
+            <div class="btn-group" title="Camera Zoom Controls">
+                <button id="btn-zoom-in" class="btn" title="Zoom In (+)"><span>＋</span></button>
+                <button id="btn-zoom-out" class="btn" title="Zoom Out (−)"><span>－</span></button>
+                <button id="btn-reset-cam" class="btn" title="Reset View (⤢)"><span>⤢</span></button>
+            </div>
+
+            <!-- Standalone HTML Export -->
+            <button id="btn-export" class="btn btn-primary" title="Download single offline HTML file">
+                <span>⬇</span> HTML
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Open Button (When Sidebar Collapsed) -->
+    <button id="btn-expand-sidebar" title="Open Explorer Sidebar">
+        <span>☰</span> Explorer
+    </button>
+
+    <!-- 2. UNIFIED LEFT SIDEBAR -->
+    <aside class="hud-sidebar" id="hud-sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">✦ ARCHITECTURE EXPLORER</span>
+            <button id="btn-collapse-sidebar" class="btn" style="padding:3px 6px; font-size:10px;" title="Collapse Sidebar">
+                <span>◀</span>
+            </button>
+        </div>
+
+        <div class="sidebar-body">
+            <!-- Architectural Utility Toggles -->
+            <div class="utility-toggles-bar">
+                <button id="toggle-cycles" class="util-toggle-btn" title="Highlight circular dependency loops">
+                    <span>⚠ Cycles:</span> <span id="hud-cycles-count">0</span>
+                </button>
+                <button id="toggle-orphans" class="util-toggle-btn" title="Highlight dead code / orphan files">
+                    <span>👻 Orphans:</span> <span id="hud-orphans-count">0</span>
+                </button>
+                <button id="toggle-clusters" class="util-toggle-btn active-clusters" title="Toggle 3D cluster hubs view">
+                    <span>📁 Hubs</span>
+                </button>
+            </div>
+
+            <!-- Tier Filter Pills -->
+            <div class="tier-filter-bar" id="tier-filter-bar">
+                <button class="tier-pill active" data-filter="all">All</button>
+                <button class="tier-pill" data-filter="entry">✦ Entry</button>
+                <button class="tier-pill" data-filter="routes">⬢ Routes</button>
+                <button class="tier-pill" data-filter="components">▧ UI</button>
+                <button class="tier-pill" data-filter="services">❖ Services</button>
+                <button class="tier-pill" data-filter="utils">▲ Utils</button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="search-wrapper">
+                <div class="search-box-inner">
+                    <span class="search-icon">⌕</span>
+                    <input type="text" id="search-input" class="search-input"
+                        placeholder="Search file, cluster, path, ext... ( / )" autocomplete="off" spellcheck="false" />
+                    <button id="search-clear" class="search-clear-btn" title="Clear search">✕</button>
+                </div>
+                <div class="search-meta-bar">
+                    <span id="search-count-label">All nodes active</span>
+                    <span>Press <b>/</b></span>
+                </div>
+            </div>
+
+            <!-- Search Results Dropdown (In-Flow, smoothly scrollable inside sidebar) -->
+            <div class="search-results-container" id="search-dropdown"></div>
+
+            <!-- Collapsible Architectural Shapes & Tiers Legend -->
+            <div class="legend-card">
+                <div class="legend-header" id="legend-toggle-header">
+                    <span class="legend-title">SHAPES & TIERS LEGEND</span>
+                </div>
+                <div class="legend-list">
+                    <div class="legend-item" data-tier="entry">
+                        <span class="legend-shape" style="color: var(--tier-entry);">✦</span>
+                        <span style="color: var(--tier-entry); font-weight:600;">Core Entry Star</span>
+                        <span class="legend-shape-desc">Octahedron</span>
+                    </div>
+                    <div class="legend-item" data-tier="routes">
+                        <span class="legend-shape" style="color: var(--tier-routes);">⬢</span>
+                        <span style="color: var(--tier-routes); font-weight:600;">Routes & APIs</span>
+                        <span class="legend-shape-desc">Hex Prism</span>
+                    </div>
+                    <div class="legend-item" data-tier="components">
+                        <span class="legend-shape" style="color: var(--tier-components);">▧</span>
+                        <span style="color: var(--tier-components); font-weight:600;">UI & Components</span>
+                        <span class="legend-shape-desc">Tech Cube</span>
+                    </div>
+                    <div class="legend-item" data-tier="services">
+                        <span class="legend-shape" style="color: var(--tier-services);">❖</span>
+                        <span style="color: var(--tier-services); font-weight:600;">Services & Logic</span>
+                        <span class="legend-shape-desc">Icosahedron</span>
+                    </div>
+                    <div class="legend-item" data-tier="utils">
+                        <span class="legend-shape" style="color: var(--tier-utils);">▲</span>
+                        <span style="color: var(--tier-utils); font-weight:600;">Utils & DB Models</span>
+                        <span class="legend-shape-desc">Pyramid</span>
+                    </div>
+                </div>
+
+                <div class="flow-legend-indicator">
+                    <div class="flow-legend-row">
+                        <span><span class="flow-legend-dot" style="background: var(--flow-upstream);"></span>Upstream (Imports)</span>
+                        <span><span class="flow-legend-dot" style="background: var(--flow-downstream);"></span>Downstream (Dependents)</span>
+                    </div>
+                    <div class="flow-legend-row">
+                        <span><span class="flow-legend-dot" style="background: var(--color-cycle);"></span>Circular Loop (⚠)</span>
+                        <span><span class="flow-legend-dot" style="background: var(--color-orphan);"></span>Orphan File (👻)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 3. ACTIVE CYCLE NAVIGATOR BANNER -->
+    <div class="hud-cycle-banner" id="cycle-banner">
+        <div class="cycle-title">
+            <span>⚠ Circular Dependency Loop</span>
+            <span id="cycle-index-label" style="color:#fff;">(1/1)</span>
+        </div>
+        <div class="cycle-path-preview" id="cycle-path-preview">a ➜ b ➜ a</div>
+        <div class="btn-group">
+            <button id="btn-prev-cycle" class="btn" title="Previous Cycle">◀</button>
+            <button id="btn-next-cycle" class="btn" title="Next Cycle">▶</button>
+        </div>
+        <button id="btn-close-cycles" class="btn" style="padding:4px 8px; font-size:10px;">✕ Exit</button>
+    </div>
+
+    <!-- 4. NODE INSPECTOR & BLAST RADIUS IMPACT PANEL -->
+    <section class="hud-inspector" id="inspector-panel">
+        <div class="inspector-header">
+            <div class="inspector-title-row">
+                <span class="inspector-shape-icon" id="insp-shape">✦</span>
+                <div class="inspector-name" id="insp-name">index.ts</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <div class="inspector-tier" id="insp-tier">ENTRY</div>
+                <button class="inspector-close-btn" id="insp-close" title="Close Inspector">✕</button>
+            </div>
+        </div>
+        <div class="inspector-path" id="insp-path">src/index.ts</div>
+
+        <!-- Blast Radius Downstream Impact Card -->
+        <div class="blast-radius-card" id="insp-blast-card">
+            <div class="blast-header">
+                <span class="blast-title">💥 Blast Radius (Impact)</span>
+                <span class="blast-badge" id="insp-blast-badge">0 files (0%)</span>
+            </div>
+            <div class="blast-desc" id="insp-blast-desc">
+                Modifying this file directly or indirectly affects <b>0 downstream files</b> across the architecture.
+            </div>
+        </div>
+
+        <div class="inspector-stats">
+            <div class="stat-row"><span>Cluster:</span> <span id="insp-cluster">src</span></div>
+            <div class="stat-row"><span>Lines:</span> <span id="insp-lines">0</span></div>
+            <div class="stat-row"><span>Imports:</span> <span id="insp-out">0</span></div>
+            <div class="stat-row"><span>Used by:</span> <span id="insp-in">0</span></div>
+            <div class="stat-row"><span>File Size:</span> <span id="insp-size">0 KB</span></div>
+            <div class="stat-row"><span>Health:</span> <span id="insp-health">Healthy</span></div>
+        </div>
+
+        <!-- Upstream Dependencies Flow Section -->
+        <div class="flow-section">
+            <div class="flow-section-title">
+                <span>Dependencies Imported (<span id="insp-upstream-count">0</span>)</span>
+            </div>
+            <div class="flow-chips" id="insp-upstream-chips"></div>
+        </div>
+
+        <!-- Downstream Dependents Flow Section -->
+        <div class="flow-section">
+            <div class="flow-section-title">
+                <span>Dependents / Used By (<span id="insp-downstream-count">0</span>)</span>
+            </div>
+            <div class="flow-chips" id="insp-downstream-chips"></div>
+        </div>
+
+        <div class="inspector-actions">
+            <button id="btn-insp-flyto" class="btn" title="Focus camera directly on this node">
+                <span>⌖</span> Focus Camera
+            </button>
+            <button id="btn-insp-isolate" class="btn" title="Isolate active node and its connections">
+                <span>⊙</span> Isolate Flow
+            </button>
+        </div>
+    </section>
+
+    <!-- Embedded Graph Data Placeholder (Injected by CLI or fallback demo data) -->
+    <script id="zaarvy-graph-script">
+        /*__ZAARVY_GRAPH_DATA_PLACEHOLDER__*/
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // =========================================================================
+        // 1. FALLBACK DEMO GRAPH
+        // =========================================================================
+        const FALLBACK_GRAPH = {
+            projectName: "zaarvy-demo-core",
+            metrics: {
+                totalFiles: 12,
+                totalDependencies: 16,
+                totalClusters: 5,
+                totalCycles: 1,
+                totalOrphans: 2,
+                complexityScore: 42,
+                density: 1.33
+            },
+            clusters: [
+                { id: "(root)", name: "(root)", path: "(root)", fileCount: 1, nodeIds: ["src/index.ts"] },
+                { id: "src/routes", name: "routes", path: "src/routes", fileCount: 2, nodeIds: ["src/routes/api.ts", "src/routes/auth.ts"] },
+                { id: "src/components", name: "components", path: "src/components", fileCount: 2, nodeIds: ["src/components/Canvas3D.tsx", "src/components/HUD.tsx"] },
+                { id: "src/services", name: "services", path: "src/services", fileCount: 3, nodeIds: ["src/services/graphEngine.ts", "src/services/astParser.ts", "src/services/telemetry.ts"] },
+                { id: "src/utils", name: "utils", path: "src/utils", fileCount: 4, nodeIds: ["src/utils/logger.ts", "src/utils/config.ts", "src/utils/db.ts", "src/utils/types.ts"] }
+            ],
+            cycles: [
+                { id: 1, path: ["src/services/graphEngine.ts", "src/services/astParser.ts", "src/services/graphEngine.ts"], length: 2 }
+            ],
+            nodes: [
+                { id: "src/index.ts", name: "index.ts", path: "src/index.ts", folder: "src", depth: 1, clusterGroup: "(root)", tier: "entry", lines: 120, size: 3400, inDegree: 0, outDegree: 4, weight: 4.5, hasCycle: false, isOrphan: false },
+                { id: "src/routes/api.ts", name: "api.ts", path: "src/routes/api.ts", folder: "src/routes", depth: 2, clusterGroup: "src/routes", tier: "routes", lines: 210, size: 5400, inDegree: 1, outDegree: 3, weight: 3.2, hasCycle: false, isOrphan: false },
+                { id: "src/routes/auth.ts", name: "auth.ts", path: "src/routes/auth.ts", folder: "src/routes", depth: 2, clusterGroup: "src/routes", tier: "routes", lines: 145, size: 4100, inDegree: 1, outDegree: 2, weight: 2.5, hasCycle: false, isOrphan: false },
+                { id: "src/components/Canvas3D.tsx", name: "Canvas3D.tsx", path: "src/components/Canvas3D.tsx", folder: "src/components", depth: 2, clusterGroup: "src/components", tier: "components", lines: 310, size: 8900, inDegree: 1, outDegree: 2, weight: 2.8, hasCycle: false, isOrphan: false },
+                { id: "src/components/HUD.tsx", name: "HUD.tsx", path: "src/components/HUD.tsx", folder: "src/components", depth: 2, clusterGroup: "src/components", tier: "components", lines: 180, size: 4900, inDegree: 1, outDegree: 1, weight: 2.1, hasCycle: false, isOrphan: false },
+                { id: "src/services/graphEngine.ts", name: "graphEngine.ts", path: "src/services/graphEngine.ts", folder: "src/services", depth: 2, clusterGroup: "src/services", tier: "services", lines: 275, size: 7600, inDegree: 3, outDegree: 2, weight: 3.9, hasCycle: true, isOrphan: false },
+                { id: "src/services/astParser.ts", name: "astParser.ts", path: "src/services/astParser.ts", folder: "src/services", depth: 2, clusterGroup: "src/services", tier: "services", lines: 195, size: 5100, inDegree: 2, outDegree: 2, weight: 3.0, hasCycle: true, isOrphan: false },
+                { id: "src/services/telemetry.ts", name: "telemetry.ts", path: "src/services/telemetry.ts", folder: "src/services", depth: 2, clusterGroup: "src/services", tier: "services", lines: 110, size: 2800, inDegree: 2, outDegree: 1, weight: 2.4, hasCycle: false, isOrphan: false },
+                { id: "src/utils/logger.ts", name: "logger.ts", path: "src/utils/logger.ts", folder: "src/utils", depth: 2, clusterGroup: "src/utils", tier: "utils", lines: 65, size: 1500, inDegree: 4, outDegree: 0, weight: 3.1, hasCycle: false, isOrphan: false },
+                { id: "src/utils/config.ts", name: "config.ts", path: "src/utils/config.ts", folder: "src/utils", depth: 2, clusterGroup: "src/utils", tier: "utils", lines: 80, size: 2100, inDegree: 3, outDegree: 0, weight: 2.6, hasCycle: false, isOrphan: false },
+                { id: "src/utils/db.ts", name: "db.ts", path: "src/utils/db.ts", folder: "src/utils", depth: 2, clusterGroup: "src/utils", tier: "utils", lines: 140, size: 3800, inDegree: 0, outDegree: 1, weight: 2.4, hasCycle: false, isOrphan: true },
+                { id: "src/utils/types.ts", name: "types.ts", path: "src/utils/types.ts", folder: "src/utils", depth: 2, clusterGroup: "src/utils", tier: "utils", lines: 95, size: 2400, inDegree: 0, outDegree: 0, weight: 1.8, hasCycle: false, isOrphan: true }
+            ],
+            edges: [
+                { source: "src/index.ts", target: "src/routes/api.ts", isCycle: false },
+                { source: "src/index.ts", target: "src/routes/auth.ts", isCycle: false },
+                { source: "src/index.ts", target: "src/components/Canvas3D.tsx", isCycle: false },
+                { source: "src/index.ts", target: "src/utils/config.ts", isCycle: false },
+                { source: "src/routes/api.ts", target: "src/services/graphEngine.ts", isCycle: false },
+                { source: "src/routes/api.ts", target: "src/services/astParser.ts", isCycle: false },
+                { source: "src/routes/api.ts", target: "src/utils/logger.ts", isCycle: false },
+                { source: "src/routes/auth.ts", target: "src/services/telemetry.ts", isCycle: false },
+                { source: "src/components/Canvas3D.tsx", target: "src/components/HUD.tsx", isCycle: false },
+                { source: "src/components/Canvas3D.tsx", target: "src/services/graphEngine.ts", isCycle: false },
+                { source: "src/services/graphEngine.ts", target: "src/services/astParser.ts", isCycle: true },
+                { source: "src/services/astParser.ts", target: "src/services/graphEngine.ts", isCycle: true },
+                { source: "src/services/graphEngine.ts", target: "src/utils/logger.ts", isCycle: false },
+                { source: "src/services/telemetry.ts", target: "src/utils/config.ts", isCycle: false },
+                { source: "src/utils/db.ts", target: "src/utils/config.ts", isCycle: false }
+            ]
+        };
+
+        const graphData = window.__ZAARVY_GRAPH_DATA__ || FALLBACK_GRAPH;
+
+        // Populate Topbar Metrics
+        document.getElementById('hud-project-name').textContent = graphData.projectName || 'project';
+        document.getElementById('hud-total-files').textContent = graphData.metrics.totalFiles;
+        document.getElementById('hud-total-deps').textContent = graphData.metrics.totalDependencies;
+        document.getElementById('hud-total-clusters').textContent = graphData.metrics.totalClusters || graphData.clusters?.length || 0;
+        document.getElementById('hud-complexity').textContent = graphData.metrics.complexityScore;
+        document.getElementById('hud-cycles-count').textContent = graphData.metrics.totalCycles || 0;
+        document.getElementById('hud-orphans-count').textContent = graphData.metrics.totalOrphans || 0;
+
+        // Pulse cycles button if cycles exist
+        const btnToggleCycles = document.getElementById('toggle-cycles');
+        if (graphData.metrics.totalCycles > 0) {
+            btnToggleCycles.style.borderColor = '#ef4444';
+            btnToggleCycles.style.color = '#fca5a5';
+        }
+
+        // Tier counts for pills
+        const tierCounts = { all: graphData.nodes.length, entry: 0, routes: 0, components: 0, services: 0, utils: 0 };
+        graphData.nodes.forEach(n => {
+            if (tierCounts[n.tier] !== undefined) tierCounts[n.tier]++;
+            else tierCounts.services++;
+        });
+
+        document.querySelectorAll('.tier-pill').forEach(pill => {
+            const f = pill.getAttribute('data-filter');
+            if (f && tierCounts[f] !== undefined) {
+                pill.textContent = `${pill.textContent.trim()} (${tierCounts[f]})`;
+            }
+        });
+
+        // =========================================================================
+        // 2. TIER CONFIGURATION & GEOMETRIES
+        // =========================================================================
+        const TIER_CONFIG = {
+            entry: { color: 0xfbbf24, hex: '#fbbf24', label: 'ENTRY', shapeIcon: '✦', shapeName: 'Octahedron' },
+            routes: { color: 0xf43f5e, hex: '#f43f5e', label: 'ROUTES', shapeIcon: '⬢', shapeName: 'Hex Prism' },
+            components: { color: 0x38bdf8, hex: '#38bdf8', label: 'COMPONENTS', shapeIcon: '▧', shapeName: 'Tech Cube' },
+            services: { color: 0xa855f7, hex: '#a855f7', label: 'SERVICES', shapeIcon: '❖', shapeName: 'Icosahedron' },
+            utils: { color: 0x10b981, hex: '#10b981', label: 'UTILS', shapeIcon: '▲', shapeName: 'Pyramid' }
+        };
+
+        const GEOMETRIES = {
+            entry: new THREE.OctahedronGeometry(1.25, 0),
+            routes: new THREE.CylinderGeometry(1.05, 1.05, 1.35, 6),
+            components: new THREE.BoxGeometry(1.25, 1.25, 1.25),
+            services: new THREE.IcosahedronGeometry(1.18, 0),
+            utils: new THREE.TetrahedronGeometry(1.25, 0),
+            spheres: new THREE.SphereGeometry(1.05, 24, 24),
+            cubes: new THREE.BoxGeometry(1.25, 1.25, 1.25),
+            hex: new THREE.CylinderGeometry(1.1, 1.1, 1.4, 6)
+        };
+
+        let currentShapeMode = 'polyhedra';
+
+        function getGeometryForNode(tier) {
+            if (currentShapeMode === 'polyhedra') {
+                return GEOMETRIES[tier] || GEOMETRIES.services;
+            }
+            return GEOMETRIES[currentShapeMode] || GEOMETRIES.polyhedra;
+        }
+
+        // =========================================================================
+        // 3. THREE.JS SCENE, CAMERA & SMOOTH ORBIT CONTROLS
+        // =========================================================================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x020206);
+        scene.fog = new THREE.FogExp2(0x020206, 0.0014);
+
+        const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 2400);
+        camera.position.set(0, 130, 240);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.075;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.55;
+        controls.maxDistance = 800;
+        controls.minDistance = 12;
+        controls.enableZoom = false; // Disable OrbitControls stepped wheel zoom to use our butter-smooth damped zoom!
+
+        // Smooth Camera Fly-To & Animation
+        let isCameraFlying = false;
+        let camFlyProgress = 1;
+        const camStartPos = new THREE.Vector3();
+        const camTargetPos = new THREE.Vector3();
+        const ctrlStartTarget = new THREE.Vector3();
+        const ctrlEndTarget = new THREE.Vector3();
+
+        // Physics-Damped Continuous Smooth Zoom
+        let zoomVelocity = 0;
+
+        // Smooth physics-based wheel zoom controller
+        window.addEventListener('wheel', (e) => {
+            // Respect native scrolling inside HUD panels (sidebar, inspector, topbar)
+            if (e.target.closest('.hud-sidebar, .hud-inspector, .app-topbar')) {
+                return;
+            }
+            e.preventDefault();
+
+            let delta = e.deltaY;
+            if (e.deltaMode === 1) delta *= 24;       // Lines
+            else if (e.deltaMode === 2) delta *= 240;  // Pages
+
+            // Clamp individual notch spikes from mouse wheel hardware detents
+            const clampedDelta = Math.max(-120, Math.min(120, delta));
+
+            // Positive deltaY (scroll down) = zoom out (positive velocity)
+            // Negative deltaY (scroll up) = zoom in (negative velocity)
+            const impulse = clampedDelta * 0.00014;
+            zoomVelocity = Math.max(-0.16, Math.min(0.16, zoomVelocity + impulse));
+        }, { passive: false });
+
+        function flyTo(targetVector, distance = 48) {
+            camStartPos.copy(camera.position);
+            ctrlStartTarget.copy(controls.target);
+            ctrlEndTarget.copy(targetVector);
+
+            const offset = camera.position.clone().sub(controls.target);
+            if (offset.lengthSq() < 0.001) offset.set(20, 20, 30);
+            offset.normalize().multiplyScalar(distance);
+
+            camTargetPos.copy(targetVector).add(offset);
+            camFlyProgress = 0;
+            isCameraFlying = true;
+            zoomVelocity = 0;
+        }
+
+        function stepZoom(direction) {
+            // Smooth velocity kick for topbar HUD buttons (-1 for zoom in, +1 for zoom out)
+            zoomVelocity = Math.max(-0.16, Math.min(0.16, zoomVelocity + direction * 0.065));
+        }
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => stepZoom(-1));
+        document.getElementById('btn-zoom-out').addEventListener('click', () => stepZoom(1));
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+        dirLight.position.set(120, 180, 100);
+        scene.add(dirLight);
+
+        const coreLight = new THREE.PointLight(0xfbbf24, 4.5, 380);
+        coreLight.position.set(0, 0, 0);
+        scene.add(coreLight);
+
+        // =========================================================================
+        // 4. PROCEDURAL GLOW TEXTURE & CLUSTER 3D LABELS
+        // =========================================================================
+        function createGlowTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+            grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.75)');
+            grad.addColorStop(0.55, 'rgba(255, 255, 255, 0.2)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 128, 128);
+            return new THREE.CanvasTexture(canvas);
+        }
+        const glowTexture = createGlowTexture();
+
+        function createClusterBillboardSprite(name, count, hexColor) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+
+            const x = 12, y = 14, w = 488, h = 100, r = 26;
+            ctx.fillStyle = 'rgba(10, 12, 26, 0.88)';
+            ctx.strokeStyle = hexColor;
+            ctx.lineWidth = 4;
+
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`📁 ${name} (${count})`, 256, 64);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.minFilter = THREE.LinearFilter;
+            const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+            const sprite = new THREE.Sprite(spriteMat);
+            sprite.scale.set(22, 5.5, 1);
+            return sprite;
+        }
+
+        // =========================================================================
+        // 5. STARFIELD BACKGROUND
+        // =========================================================================
+        const starCount = 2800;
+        const starGeo = new THREE.BufferGeometry();
+        const starPositions = new Float32Array(starCount * 3);
+        const starPhases = new Float32Array(starCount);
+
+        for (let i = 0; i < starCount; i++) {
+            const r = 360 + Math.random() * 580;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            starPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            starPositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+            starPositions[i * 3 + 2] = r * Math.cos(phi);
+            starPhases[i] = Math.random() * Math.PI * 2;
+        }
+
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        starGeo.setAttribute('aPhase', new THREE.BufferAttribute(starPhases, 1));
+
+        const starMat = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uColor: { value: new THREE.Color(0xc7d2fe) }
+            },
+            vertexShader: `
+                attribute float aPhase;
+                varying float vAlpha;
+                uniform float uTime;
+                void main() {
+                    vAlpha = 0.3 + 0.7 * sin(uTime * 1.6 + aPhase);
+                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                    gl_PointSize = (230.0 / -mvPosition.z) * (0.6 + 0.4 * vAlpha);
+                    gl_Position = projectionMatrix * mvPosition;
+                }
+            `,
+            fragmentShader: `
+                varying float vAlpha;
+                uniform vec3 uColor;
+                void main() {
+                    float d = length(gl_PointCoord - vec2(0.5));
+                    if (d > 0.5) discard;
+                    float strength = smoothstep(0.5, 0.05, d);
+                    gl_FragColor = vec4(uColor, strength * vAlpha);
+                }
+            `,
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+        });
+
+        const starField = new THREE.Points(starGeo, starMat);
+        scene.add(starField);
+
+        // =========================================================================
+        // 6. HIERARCHICAL 3D CLUSTER HUBS & SUB-ORBIT FILE NODES
+        // =========================================================================
+        const orbitalGroup = new THREE.Group();
+        scene.add(orbitalGroup);
+
+        const clustersData = graphData.clusters || [];
+        const clusterHubs = new Map();
+        const nodeMap = new Map();
+        const nodeMeshes = [];
+        const hubMeshes = [];
+
+        const clusterCount = Math.max(1, clustersData.length);
+        const clusterOrbitRadius = 85 + Math.sqrt(clusterCount) * 24;
+
+        clustersData.forEach((c, idx) => {
+            const angle = (idx / clusterCount) * Math.PI * 2;
+            const yOffset = ((idx % 3) - 1) * 14;
+            const clusterPos = new THREE.Vector3(
+                Math.cos(angle) * clusterOrbitRadius,
+                yOffset,
+                Math.sin(angle) * clusterOrbitRadius
+            );
+
+            const hubGeo = new THREE.IcosahedronGeometry(3.6, 1);
+            const hubMat = new THREE.MeshStandardMaterial({
+                color: 0x6366f1,
+                emissive: 0x4f46e5,
+                emissiveIntensity: 0.9,
+                roughness: 0.2,
+                metalness: 0.5,
+                transparent: true,
+                opacity: 0.92,
+                flatShading: true
+            });
+            const hubMesh = new THREE.Mesh(hubGeo, hubMat);
+            hubMesh.position.copy(clusterPos);
+            hubMesh.userData = { isClusterHub: true, clusterId: c.id };
+            orbitalGroup.add(hubMesh);
+            hubMeshes.push(hubMesh);
+
+            const wireGeo = new THREE.WireframeGeometry(hubGeo);
+            const wireMat = new THREE.LineBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.4 });
+            hubMesh.add(new THREE.LineSegments(wireGeo, wireMat));
+
+            const ringGeo = new THREE.RingGeometry(5.2, 5.6, 32);
+            ringGeo.rotateX(Math.PI / 2);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0x818cf8, side: THREE.DoubleSide, transparent: true, opacity: 0.35 });
+            const haloRing = new THREE.Mesh(ringGeo, ringMat);
+            hubMesh.add(haloRing);
+
+            const labelSprite = createClusterBillboardSprite(c.name, c.fileCount, '#818cf8');
+            labelSprite.position.set(clusterPos.x, clusterPos.y + 7.5, clusterPos.z);
+            orbitalGroup.add(labelSprite);
+
+            clusterHubs.set(c.id, {
+                cluster: c,
+                hubMesh,
+                labelSprite,
+                haloRing,
+                position: clusterPos,
+                isExpanded: true,
+                nodeIds: c.nodeIds
+            });
+        });
+
+        graphData.nodes.forEach(node => {
+            const clusterId = node.clusterGroup || '(root)';
+            const clusterObj = clusterHubs.get(clusterId);
+            const hubPos = clusterObj ? clusterObj.position : new THREE.Vector3(0, 0, 0);
+
+            const siblingNodes = clusterObj ? clusterObj.nodeIds : [];
+            const idxInCluster = Math.max(0, siblingNodes.indexOf(node.id));
+            const sibCount = Math.max(1, siblingNodes.length);
+
+            const childAngle = (idxInCluster / sibCount) * Math.PI * 2;
+            const childR = 12 + Math.sqrt(sibCount) * 5.2;
+            const childY = ((idxInCluster % 3) - 1) * 3.5;
+
+            const expandedPos = new THREE.Vector3(
+                hubPos.x + Math.cos(childAngle) * childR,
+                hubPos.y + childY,
+                hubPos.z + Math.sin(childAngle) * childR
+            );
+
+            const collapsedPos = hubPos.clone();
+            const initialPos = expandedPos.clone();
+
+            const cfg = TIER_CONFIG[node.tier] || TIER_CONFIG.services;
+            const isEntry = node.tier === 'entry';
+            const scale = isEntry ? 3.8 : Math.max(1.3, Math.min(3.2, node.weight * 0.75));
+
+            const geo = getGeometryForNode(node.tier);
+            const mat = new THREE.MeshStandardMaterial({
+                color: cfg.color,
+                emissive: cfg.color,
+                emissiveIntensity: isEntry ? 1.3 : 0.7,
+                roughness: 0.25,
+                metalness: 0.35,
+                transparent: true,
+                opacity: 1.0,
+                flatShading: true
+            });
+
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.copy(initialPos);
+            mesh.scale.setScalar(scale);
+            mesh.userData = {
+                id: node.id,
+                tier: node.tier,
+                clusterId,
+                rotSpeedX: (Math.random() - 0.5) * 0.012,
+                rotSpeedY: 0.008 + Math.random() * 0.012
+            };
+            orbitalGroup.add(mesh);
+            nodeMeshes.push(mesh);
+
+            const wireGeo = new THREE.WireframeGeometry(geo);
+            const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.28 });
+            const wireLines = new THREE.LineSegments(wireGeo, wireMat);
+            mesh.add(wireLines);
+
+            const spriteMat = new THREE.SpriteMaterial({
+                map: glowTexture,
+                color: cfg.color,
+                transparent: true,
+                opacity: isEntry ? 0.9 : 0.52,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const sprite = new THREE.Sprite(spriteMat);
+            sprite.scale.setScalar(scale * (isEntry ? 5.0 : 3.4));
+            mesh.add(sprite);
+
+            nodeMap.set(node.id, {
+                node,
+                mesh,
+                sprite,
+                wireLines,
+                baseScale: scale,
+                baseColor: cfg.color,
+                position: mesh.position,
+                expandedPos,
+                collapsedPos,
+                upstream: new Set(),
+                downstream: new Set()
+            });
+        });
+
+        // =========================================================================
+        // 7. DEPENDENCY EDGES & DIRECTIONAL FLOW PARTICLES
+        // =========================================================================
+        const edgeObjects = [];
+        const pulseCount = Math.min(500, Math.max(80, graphData.edges.length * 2));
+        const pulseGeo = new THREE.BufferGeometry();
+        const pulsePositions = new Float32Array(pulseCount * 3);
+        const pulseColors = new Float32Array(pulseCount * 3);
+        const pulseMeta = [];
+
+        let flowDirection = 'imports';
+        let flowSpeedMultiplier = 1.0;
+
+        graphData.edges.forEach((edge) => {
+            const src = nodeMap.get(edge.source);
+            const tgt = nodeMap.get(edge.target);
+            if (!src || !tgt) return;
+
+            src.upstream.add(edge.target);
+            tgt.downstream.add(edge.source);
+
+            const mid = new THREE.Vector3().addVectors(src.position, tgt.position).multiplyScalar(0.5);
+            const dist = src.position.distanceTo(tgt.position);
+            mid.y += Math.min(45, dist * 0.22) * (mid.y >= 0 ? 1 : -1);
+
+            const curve = new THREE.QuadraticBezierCurve3(src.position, mid, tgt.position);
+            const points = curve.getPoints(30);
+            const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
+
+            const lineMat = new THREE.LineBasicMaterial({
+                color: edge.isCycle ? 0xef4444 : src.baseColor,
+                transparent: true,
+                opacity: edge.isCycle ? 0.85 : 0.22,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            const line = new THREE.Line(lineGeo, lineMat);
+            orbitalGroup.add(line);
+
+            edgeObjects.push({
+                sourceId: edge.source,
+                targetId: edge.target,
+                isCycle: edge.isCycle,
+                line,
+                lineMat,
+                curve,
+                baseColor: new THREE.Color(edge.isCycle ? 0xef4444 : src.baseColor)
+            });
+        });
+
+        if (edgeObjects.length > 0) {
+            for (let i = 0; i < pulseCount; i++) {
+                const edgeObj = edgeObjects[i % edgeObjects.length];
+                pulseMeta.push({
+                    edgeObj,
+                    progress: Math.random(),
+                    speed: 0.0035 + Math.random() * 0.005
+                });
+                pulseColors[i * 3] = edgeObj.baseColor.r;
+                pulseColors[i * 3 + 1] = edgeObj.baseColor.g;
+                pulseColors[i * 3 + 2] = edgeObj.baseColor.b;
+            }
+
+            pulseGeo.setAttribute('position', new THREE.BufferAttribute(pulsePositions, 3));
+            pulseGeo.setAttribute('color', new THREE.BufferAttribute(pulseColors, 3));
+
+            const pulseMat = new THREE.PointsMaterial({
+                size: 3.8,
+                map: glowTexture,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            const pulsePoints = new THREE.Points(pulseGeo, pulseMat);
+            orbitalGroup.add(pulsePoints);
+        }
+
+        // =========================================================================
+        // 8. ARCHITECTURAL UTILITIES & HIGHLIGHTING
+        // =========================================================================
+        let hoveredNodeId = null;
+        let selectedNodeId = null;
+        let activeTierFilter = 'all';
+        let searchFilterText = '';
+        let isIsolatedFlow = false;
+        let isCyclesMode = false;
+        let isOrphansMode = false;
+        let showClusterHubs = true;
+
+        let activeCycleIdx = 0;
+        const cyclesList = graphData.cycles || [];
+
+        const upstreamColor = new THREE.Color(0x06b6d4);
+        const downstreamColor = new THREE.Color(0xf59e0b);
+        const blastColor = new THREE.Color(0xf97316);
+        const cycleColor = new THREE.Color(0xef4444);
+        const orphanColor = new THREE.Color(0xc084fc);
+
+        function computeBlastRadius(startNodeId) {
+            const visited = new Set();
+            const queue = [startNodeId];
+            visited.add(startNodeId);
+
+            while (queue.length > 0) {
+                const curr = queue.shift();
+                const currEntry = nodeMap.get(curr);
+                if (currEntry && currEntry.downstream) {
+                    for (const downId of currEntry.downstream) {
+                        if (!visited.has(downId)) {
+                            visited.add(downId);
+                            queue.push(downId);
+                        }
+                    }
+                }
+            }
+            visited.delete(startNodeId);
+            return visited;
+        }
+
+        function updateSceneDisplay() {
+            const activeId = selectedNodeId || hoveredNodeId;
+            const hasFocus = Boolean(activeId);
+            const activeEntry = hasFocus ? nodeMap.get(activeId) : null;
+            const hasSearch = searchFilterText.length > 0;
+            const hasTierFilter = activeTierFilter !== 'all';
+
+            const blastSet = hasFocus ? computeBlastRadius(activeId) : new Set();
+
+            nodeMap.forEach((entry, id) => {
+                const clusterObj = clusterHubs.get(entry.node.clusterGroup || '(root)');
+                const isClusterCollapsed = clusterObj && !clusterObj.isExpanded;
+
+                let matchesSearch = true;
+                if (hasSearch) {
+                    const text = `${entry.node.name} ${entry.node.path} ${entry.node.tier} ${entry.node.clusterGroup || ''}`.toLowerCase();
+                    matchesSearch = text.includes(searchFilterText);
+                }
+
+                let matchesTier = true;
+                if (hasTierFilter) {
+                    matchesTier = entry.node.tier === activeTierFilter;
+                }
+
+                let isConnected = false;
+                let isPrimary = false;
+                let isUpstream = false;
+                let isDownstream = false;
+                let isBlastAffected = false;
+
+                if (hasFocus && activeEntry) {
+                    if (id === activeId) {
+                        isPrimary = true;
+                        isConnected = true;
+                    } else if (activeEntry.upstream.has(id)) {
+                        isUpstream = true;
+                        isConnected = true;
+                    } else if (blastSet.has(id)) {
+                        isBlastAffected = true;
+                        isDownstream = true;
+                        isConnected = true;
+                    }
+                }
+
+                let isVisible = true;
+                if (isClusterCollapsed) {
+                    isVisible = false;
+                } else if (isCyclesMode) {
+                    const activeCycle = cyclesList[activeCycleIdx];
+                    isVisible = activeCycle ? activeCycle.path.includes(id) : entry.node.hasCycle;
+                } else if (isOrphansMode) {
+                    isVisible = entry.node.isOrphan;
+                } else if (isIsolatedFlow && hasFocus) {
+                    isVisible = isConnected;
+                } else if (hasTierFilter) {
+                    isVisible = matchesTier;
+                } else if (hasSearch) {
+                    isVisible = matchesSearch;
+                }
+
+                entry.mesh.visible = isVisible;
+                if (!isVisible) return;
+
+                if (isCyclesMode) {
+                    entry.mesh.material.opacity = 1.0;
+                    entry.mesh.material.emissiveIntensity = 2.5;
+                    entry.mesh.material.color.copy(cycleColor);
+                    entry.mesh.material.emissive.copy(cycleColor);
+                    entry.sprite.material.opacity = 0.95;
+                    entry.sprite.material.color.copy(cycleColor);
+                    entry.mesh.scale.setScalar(entry.baseScale * 1.35);
+                } else if (isOrphansMode) {
+                    entry.mesh.material.opacity = 1.0;
+                    entry.mesh.material.emissiveIntensity = 2.2;
+                    entry.mesh.material.color.copy(orphanColor);
+                    entry.mesh.material.emissive.copy(orphanColor);
+                    entry.sprite.material.opacity = 0.95;
+                    entry.sprite.material.color.copy(orphanColor);
+                    entry.mesh.scale.setScalar(entry.baseScale * 1.3);
+                } else if (hasFocus) {
+                    if (isPrimary) {
+                        entry.mesh.material.opacity = 1.0;
+                        entry.mesh.material.emissiveIntensity = 2.6;
+                        entry.sprite.material.opacity = 1.0;
+                        entry.mesh.scale.setScalar(entry.baseScale * 1.4);
+                    } else if (isBlastAffected) {
+                        entry.mesh.material.opacity = 1.0;
+                        entry.mesh.material.emissiveIntensity = 2.2;
+                        entry.mesh.material.color.copy(blastColor);
+                        entry.mesh.material.emissive.copy(blastColor);
+                        entry.sprite.material.opacity = 0.9;
+                        entry.sprite.material.color.copy(blastColor);
+                        entry.mesh.scale.setScalar(entry.baseScale * 1.25);
+                    } else if (isUpstream) {
+                        entry.mesh.material.opacity = 0.95;
+                        entry.mesh.material.emissiveIntensity = 1.8;
+                        entry.mesh.material.color.copy(upstreamColor);
+                        entry.mesh.material.emissive.copy(upstreamColor);
+                        entry.sprite.material.opacity = 0.85;
+                        entry.mesh.scale.setScalar(entry.baseScale * 1.18);
+                    } else {
+                        entry.mesh.material.opacity = 0.08;
+                        entry.mesh.material.emissiveIntensity = 0.05;
+                        entry.sprite.material.opacity = 0.03;
+                        entry.mesh.scale.setScalar(entry.baseScale * 0.82);
+                    }
+                } else if (hasSearch || hasTierFilter) {
+                    const match = matchesSearch && matchesTier;
+                    entry.mesh.material.opacity = match ? 1.0 : 0.08;
+                    entry.mesh.material.emissiveIntensity = match ? 1.5 : 0.05;
+                    entry.sprite.material.opacity = match ? 0.8 : 0.02;
+                    entry.mesh.scale.setScalar(match ? entry.baseScale * 1.15 : entry.baseScale * 0.8);
+                } else {
+                    const cfg = TIER_CONFIG[entry.node.tier] || TIER_CONFIG.services;
+                    entry.mesh.material.opacity = 1.0;
+                    entry.mesh.material.color.setHex(cfg.color);
+                    entry.mesh.material.emissive.setHex(cfg.color);
+                    entry.mesh.material.emissiveIntensity = entry.node.tier === 'entry' ? 1.3 : 0.7;
+                    entry.sprite.material.opacity = entry.node.tier === 'entry' ? 0.9 : 0.52;
+                    entry.sprite.material.color.setHex(cfg.color);
+                    entry.mesh.scale.setScalar(entry.baseScale);
+                }
+            });
+
+            // Edge visibility
+            edgeObjects.forEach((edgeObj) => {
+                const srcEntry = nodeMap.get(edgeObj.sourceId);
+                const tgtEntry = nodeMap.get(edgeObj.targetId);
+                const srcVis = srcEntry && srcEntry.mesh.visible;
+                const tgtVis = tgtEntry && tgtEntry.mesh.visible;
+
+                if (isCyclesMode) {
+                    const activeCycle = cyclesList[activeCycleIdx];
+                    let isPart = edgeObj.isCycle;
+                    if (activeCycle) {
+                        const path = activeCycle.path;
+                        isPart = false;
+                        for (let i = 0; i < path.length - 1; i++) {
+                            if (path[i] === edgeObj.sourceId && path[i + 1] === edgeObj.targetId) {
+                                isPart = true; break;
+                            }
+                        }
+                    }
+                    edgeObj.line.visible = isPart;
+                    edgeObj.lineMat.opacity = isPart ? 0.95 : 0.02;
+                    edgeObj.lineMat.color.copy(cycleColor);
+                } else if (isOrphansMode) {
+                    edgeObj.line.visible = false;
+                } else if (hasFocus) {
+                    const isUp = activeEntry.upstream.has(edgeObj.targetId) && edgeObj.sourceId === activeId;
+                    const isBlastEdge = (blastSet.has(edgeObj.targetId) && (edgeObj.sourceId === activeId || blastSet.has(edgeObj.sourceId)));
+
+                    if (isUp) {
+                        edgeObj.line.visible = srcVis && tgtVis;
+                        edgeObj.lineMat.opacity = 0.95;
+                        edgeObj.lineMat.color.copy(upstreamColor);
+                    } else if (isBlastEdge) {
+                        edgeObj.line.visible = srcVis && tgtVis;
+                        edgeObj.lineMat.opacity = 0.95;
+                        edgeObj.lineMat.color.copy(blastColor);
+                    } else {
+                        edgeObj.line.visible = !isIsolatedFlow && srcVis && tgtVis;
+                        edgeObj.lineMat.opacity = 0.02;
+                        edgeObj.lineMat.color.copy(edgeObj.baseColor);
+                    }
+                } else {
+                    const visible = srcVis && tgtVis;
+                    edgeObj.line.visible = visible;
+                    edgeObj.lineMat.opacity = visible ? 0.22 : 0.02;
+                    edgeObj.lineMat.color.copy(edgeObj.baseColor);
+                }
+            });
+
+            // Cluster Hub visibility
+            clusterHubs.forEach(c => {
+                c.hubMesh.visible = showClusterHubs;
+                c.labelSprite.visible = showClusterHubs;
+                c.haloRing.visible = showClusterHubs;
+                if (!c.isExpanded) {
+                    c.hubMesh.material.emissiveIntensity = 1.4;
+                    c.haloRing.material.opacity = 0.7;
+                } else {
+                    c.hubMesh.material.emissiveIntensity = 0.75;
+                    c.haloRing.material.opacity = 0.25;
+                }
+            });
+        }
+
+        // =========================================================================
+        // 9. CLUSTER EXPAND / COLLAPSE
+        // =========================================================================
+        let clusterAnimQueue = [];
+
+        function toggleCluster(clusterId, expand) {
+            const clusterObj = clusterHubs.get(clusterId);
+            if (!clusterObj) return;
+
+            const targetExpand = expand !== undefined ? expand : !clusterObj.isExpanded;
+            clusterObj.isExpanded = targetExpand;
+
+            clusterObj.nodeIds.forEach(id => {
+                const entry = nodeMap.get(id);
+                if (!entry) return;
+
+                clusterAnimQueue.push({
+                    entry,
+                    startPos: entry.mesh.position.clone(),
+                    endPos: targetExpand ? entry.expandedPos.clone() : entry.collapsedPos.clone(),
+                    progress: 0
+                });
+            });
+
+            updateSceneDisplay();
+        }
+
+        window.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            raycaster.setFromCamera(pointer, camera);
+            const hits = raycaster.intersectObjects(hubMeshes, false);
+            if (hits.length > 0) {
+                const cid = hits[0].object.userData.clusterId;
+                toggleCluster(cid, false);
+            } else {
+                const nodeHits = raycaster.intersectObjects(nodeMeshes.filter(m => m.visible), false);
+                if (nodeHits.length > 0) {
+                    const cid = nodeHits[0].object.userData.clusterId;
+                    toggleCluster(cid, false);
+                }
+            }
+        });
+
+        let allClustersExpanded = true;
+        const btnToggleAllClusters = document.getElementById('btn-toggle-all-clusters');
+        btnToggleAllClusters.addEventListener('click', () => {
+            allClustersExpanded = !allClustersExpanded;
+            clusterHubs.forEach((_, cid) => toggleCluster(cid, allClustersExpanded));
+            btnToggleAllClusters.innerHTML = allClustersExpanded ? '<span>⊟</span> Clusters' : '<span>⊞</span> Clusters';
+        });
+
+        // =========================================================================
+        // 10. ARCHITECTURAL UTILITIES: CYCLES & ORPHANS
+        // =========================================================================
+        const cycleBanner = document.getElementById('cycle-banner');
+        const cyclePathPreview = document.getElementById('cycle-path-preview');
+        const cycleIndexLabel = document.getElementById('cycle-index-label');
+
+        function updateCycleBanner() {
+            if (!isCyclesMode || cyclesList.length === 0) {
+                cycleBanner.classList.remove('visible');
+                return;
+            }
+            cycleBanner.classList.add('visible');
+            const cycle = cyclesList[activeCycleIdx];
+            cycleIndexLabel.textContent = `(${activeCycleIdx + 1}/${cyclesList.length})`;
+            cyclePathPreview.textContent = cycle.path.map(p => p.split('/').pop()).join(' ➜ ');
+
+            const firstNode = nodeMap.get(cycle.path[0]);
+            if (firstNode) flyTo(firstNode.position, 55);
+        }
+
+        btnToggleCycles.addEventListener('click', () => {
+            isCyclesMode = !isCyclesMode;
+            btnToggleCycles.classList.toggle('active-cycles', isCyclesMode);
+            if (isCyclesMode) {
+                isOrphansMode = false;
+                btnToggleOrphans.classList.remove('active-orphans');
+                activeCycleIdx = 0;
+            }
+            updateCycleBanner();
+            updateSceneDisplay();
+        });
+
+        document.getElementById('btn-prev-cycle').addEventListener('click', () => {
+            if (cyclesList.length > 0) {
+                activeCycleIdx = (activeCycleIdx - 1 + cyclesList.length) % cyclesList.length;
+                updateCycleBanner();
+                updateSceneDisplay();
+            }
+        });
+
+        document.getElementById('btn-next-cycle').addEventListener('click', () => {
+            if (cyclesList.length > 0) {
+                activeCycleIdx = (activeCycleIdx + 1) % cyclesList.length;
+                updateCycleBanner();
+                updateSceneDisplay();
+            }
+        });
+
+        document.getElementById('btn-close-cycles').addEventListener('click', () => {
+            isCyclesMode = false;
+            btnToggleCycles.classList.remove('active-cycles');
+            updateCycleBanner();
+            updateSceneDisplay();
+        });
+
+        const btnToggleOrphans = document.getElementById('toggle-orphans');
+        btnToggleOrphans.addEventListener('click', () => {
+            isOrphansMode = !isOrphansMode;
+            btnToggleOrphans.classList.toggle('active-orphans', isOrphansMode);
+            if (isOrphansMode) {
+                isCyclesMode = false;
+                btnToggleCycles.classList.remove('active-cycles');
+                updateCycleBanner();
+            }
+            updateSceneDisplay();
+        });
+
+        const btnToggleClusters = document.getElementById('toggle-clusters');
+        btnToggleClusters.addEventListener('click', () => {
+            showClusterHubs = !showClusterHubs;
+            btnToggleClusters.classList.toggle('active-clusters', showClusterHubs);
+            updateSceneDisplay();
+        });
+
+        // =========================================================================
+        // 11. SIDEBAR COLLAPSE / EXPAND TOGGLE
+        // =========================================================================
+        const sidebar = document.getElementById('hud-sidebar');
+        const btnCollapseSidebar = document.getElementById('btn-collapse-sidebar');
+        const btnExpandSidebar = document.getElementById('btn-expand-sidebar');
+
+        btnCollapseSidebar.addEventListener('click', () => {
+            sidebar.classList.add('collapsed');
+            btnExpandSidebar.classList.add('visible');
+        });
+
+        btnExpandSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('collapsed');
+            btnExpandSidebar.classList.remove('visible');
+        });
+
+        // =========================================================================
+        // 12. SHAPE MODE & FLOW MODE SELECTORS
+        // =========================================================================
+        const shapeSelect = document.getElementById('select-shape-mode');
+        shapeSelect.addEventListener('change', (e) => {
+            currentShapeMode = e.target.value;
+            nodeMap.forEach(entry => {
+                const newGeo = getGeometryForNode(entry.node.tier);
+                entry.mesh.geometry = newGeo;
+                if (entry.wireLines) {
+                    entry.wireLines.geometry = new THREE.WireframeGeometry(newGeo);
+                }
+            });
+        });
+
+        const flowModeSelect = document.getElementById('select-flow-mode');
+        flowModeSelect.addEventListener('change', (e) => {
+            flowDirection = e.target.value;
+        });
+
+        const btnFlowSpeed = document.getElementById('btn-flow-speed');
+        const speeds = [
+            { label: '1x', mult: 1.0 },
+            { label: '2x', mult: 2.0 },
+            { label: 'Pause', mult: 0.0 }
+        ];
+        let currentSpeedIdx = 0;
+        btnFlowSpeed.addEventListener('click', () => {
+            currentSpeedIdx = (currentSpeedIdx + 1) % speeds.length;
+            const s = speeds[currentSpeedIdx];
+            btnFlowSpeed.innerHTML = `<span>⚡</span> ${s.label}`;
+            flowSpeedMultiplier = s.mult;
+        });
+
+        document.getElementById('tier-filter-bar').addEventListener('click', (e) => {
+            const pill = e.target.closest('.tier-pill');
+            if (!pill) return;
+            document.querySelectorAll('.tier-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            activeTierFilter = pill.getAttribute('data-filter');
+            updateSceneDisplay();
+            updateSearchResultsDropdown();
+        });
+
+        // =========================================================================
+        // 13. IN-SIDEBAR SEARCH & AUTOCOMPLETE
+        // =========================================================================
+        const searchInput = document.getElementById('search-input');
+        const searchClear = document.getElementById('search-clear');
+        const searchDropdown = document.getElementById('search-dropdown');
+        const searchCountLabel = document.getElementById('search-count-label');
+
+        let highlightedSearchIdx = -1;
+
+        function getFilteredNodes() {
+            return graphData.nodes.filter(n => {
+                if (activeTierFilter !== 'all' && n.tier !== activeTierFilter) return false;
+                if (!searchFilterText) return true;
+                const fullText = `${n.name} ${n.path} ${n.tier} ${n.clusterGroup || ''} .${n.ext || ''}`.toLowerCase();
+                return fullText.includes(searchFilterText);
+            });
+        }
+
+        function highlightMatch(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<mark>$1</mark>');
+        }
+
+        function updateSearchResultsDropdown() {
+            const matches = getFilteredNodes();
+            const total = graphData.nodes.length;
+
+            if (searchFilterText || activeTierFilter !== 'all') {
+                searchClear.style.display = 'block';
+                searchCountLabel.textContent = `Found ${matches.length} of ${total}`;
+            } else {
+                searchClear.style.display = 'none';
+                searchCountLabel.textContent = `All ${total} nodes active`;
+            }
+
+            if (!searchFilterText && activeTierFilter === 'all') {
+                searchDropdown.classList.remove('visible');
+                searchDropdown.innerHTML = '';
+                highlightedSearchIdx = -1;
+                return;
+            }
+
+            if (matches.length === 0) {
+                searchDropdown.innerHTML = `<div style="padding:10px; text-align:center; color:var(--text-muted); font-size:10px;">No nodes matching "${searchFilterText}"</div>`;
+                searchDropdown.classList.add('visible');
+                return;
+            }
+
+            const itemsHtml = matches.slice(0, 16).map((node, i) => {
+                const cfg = TIER_CONFIG[node.tier] || TIER_CONFIG.services;
+                return `
+                    <div class="search-result-item ${i === highlightedSearchIdx ? 'highlighted' : ''}" data-id="${node.id}">
+                        <span class="result-shape-icon" style="color:${cfg.hex}">${cfg.shapeIcon}</span>
+                        <div class="result-info">
+                            <div class="result-name-row">
+                                <span>${highlightMatch(node.name, searchFilterText)}</span>
+                                <span class="result-tier-badge" style="background:${cfg.hex}22; color:${cfg.hex}">${node.tier}</span>
+                                ${node.hasCycle ? '<span style="color:#ef4444; font-size:8px;">⚠ Cycle</span>' : ''}
+                                ${node.isOrphan ? '<span style="color:#c084fc; font-size:8px;">👻 Orphan</span>' : ''}
+                            </div>
+                            <div class="result-path">${highlightMatch(node.path, searchFilterText)}</div>
+                        </div>
+                        <span class="result-stats-badge">↑${node.outDegree} ↓${node.inDegree}</span>
+                    </div>
+                `;
+            }).join('');
+
+            searchDropdown.innerHTML = itemsHtml;
+            searchDropdown.classList.add('visible');
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            searchFilterText = e.target.value.trim().toLowerCase();
+            highlightedSearchIdx = -1;
+            updateSceneDisplay();
+            updateSearchResultsDropdown();
+        });
+
+        searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            searchFilterText = '';
+            highlightedSearchIdx = -1;
+            updateSceneDisplay();
+            updateSearchResultsDropdown();
+            searchInput.focus();
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            const items = searchDropdown.querySelectorAll('.search-result-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (items.length > 0) {
+                    highlightedSearchIdx = (highlightedSearchIdx + 1) % items.length;
+                    items.forEach((it, idx) => it.classList.toggle('highlighted', idx === highlightedSearchIdx));
+                    items[highlightedSearchIdx]?.scrollIntoView({ block: 'nearest' });
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (items.length > 0) {
+                    highlightedSearchIdx = (highlightedSearchIdx - 1 + items.length) % items.length;
+                    items.forEach((it, idx) => it.classList.toggle('highlighted', idx === highlightedSearchIdx));
+                    items[highlightedSearchIdx]?.scrollIntoView({ block: 'nearest' });
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (highlightedSearchIdx >= 0 && items[highlightedSearchIdx]) {
+                    const id = items[highlightedSearchIdx].getAttribute('data-id');
+                    selectAndFocusNode(id);
+                } else {
+                    const matches = getFilteredNodes();
+                    if (matches.length > 0) {
+                        selectAndFocusNode(matches[0].id);
+                    }
+                }
+            } else if (e.key === 'Escape') {
+                searchDropdown.classList.remove('visible');
+            }
+        });
+
+        searchDropdown.addEventListener('click', (e) => {
+            const item = e.target.closest('.search-result-item');
+            if (!item) return;
+            selectAndFocusNode(item.getAttribute('data-id'));
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.key === '/' || (e.ctrlKey && e.key === 'k')) && document.activeElement !== searchInput) {
+                e.preventDefault();
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.remove('collapsed');
+                    btnExpandSidebar.classList.remove('visible');
+                }
+                searchInput.focus();
+                searchInput.select();
+            }
+        });
+
+        // =========================================================================
+        // 14. ACTIVE NODE TELEMETRY INSPECTOR & BLAST RADIUS IMPACT
+        // =========================================================================
+        const inspectorPanel = document.getElementById('inspector-panel');
+
+        function updateInspector(entry) {
+            if (!entry) {
+                inspectorPanel.classList.remove('visible');
+                return;
+            }
+            const { node } = entry;
+            const cfg = TIER_CONFIG[node.tier] || TIER_CONFIG.services;
+
+            document.getElementById('insp-shape').textContent = cfg.shapeIcon;
+            document.getElementById('insp-shape').style.color = cfg.hex;
+            document.getElementById('insp-name').textContent = node.name;
+            document.getElementById('insp-path').textContent = node.path;
+            document.getElementById('insp-cluster').textContent = node.clusterGroup || '(root)';
+            document.getElementById('insp-out').textContent = `${node.outDegree} files`;
+            document.getElementById('insp-in').textContent = `${node.inDegree} files`;
+            document.getElementById('insp-lines').textContent = node.lines.toLocaleString();
+            document.getElementById('insp-size').textContent = `${(node.size / 1024).toFixed(1)} KB`;
+
+            const healthEl = document.getElementById('insp-health');
+            if (node.hasCycle) {
+                healthEl.innerHTML = '<span style="color:#ef4444; font-weight:700;">⚠ Circular Loop</span>';
+            } else if (node.isOrphan) {
+                healthEl.innerHTML = '<span style="color:#c084fc; font-weight:700;">👻 Orphan File</span>';
+            } else {
+                healthEl.innerHTML = '<span style="color:#10b981; font-weight:700;">✓ Healthy</span>';
+            }
+
+            const blastSet = computeBlastRadius(node.id);
+            const blastCount = blastSet.size;
+            const total = Math.max(1, graphData.nodes.length);
+            const blastPercent = Math.round((blastCount / total) * 100);
+
+            document.getElementById('insp-blast-badge').textContent = `${blastCount} files (${blastPercent}%)`;
+            document.getElementById('insp-blast-desc').innerHTML = `Modifying this file directly or indirectly affects <b>${blastCount} downstream files</b> (${blastPercent}% of codebase).`;
+
+            const tierBadge = document.getElementById('insp-tier');
+            tierBadge.textContent = `${cfg.shapeIcon} ${cfg.label}`;
+            tierBadge.style.background = `${cfg.hex}22`;
+            tierBadge.style.color = cfg.hex;
+            tierBadge.style.border = `1px solid ${cfg.hex}66`;
+
+            document.getElementById('insp-upstream-count').textContent = entry.upstream.size;
+            const upChips = document.getElementById('insp-upstream-chips');
+            if (entry.upstream.size === 0) {
+                upChips.innerHTML = '<span style="font-size:9px; color:var(--text-muted);">Root module (No file imports)</span>';
+            } else {
+                upChips.innerHTML = Array.from(entry.upstream).map(uid => {
+                    const un = nodeMap.get(uid)?.node.name || uid;
+                    return `<span class="flow-chip upstream" data-target="${uid}">${un}</span>`;
+                }).join('');
+            }
+
+            document.getElementById('insp-downstream-count').textContent = entry.downstream.size;
+            const downChips = document.getElementById('insp-downstream-chips');
+            if (entry.downstream.size === 0) {
+                downChips.innerHTML = '<span style="font-size:9px; color:var(--text-muted);">Not imported by any project file</span>';
+            } else {
+                downChips.innerHTML = Array.from(entry.downstream).map(did => {
+                    const dn = nodeMap.get(did)?.node.name || did;
+                    return `<span class="flow-chip downstream" data-target="${did}">${dn}</span>`;
+                }).join('');
+            }
+
+            inspectorPanel.classList.add('visible');
+        }
+
+        function selectAndFocusNode(id) {
+            const entry = nodeMap.get(id);
+            if (!entry) return;
+
+            const cid = entry.node.clusterGroup || '(root)';
+            const clusterObj = clusterHubs.get(cid);
+            if (clusterObj && !clusterObj.isExpanded) {
+                toggleCluster(cid, true);
+            }
+
+            selectedNodeId = id;
+            hoveredNodeId = null;
+            updateSceneDisplay();
+            updateInspector(entry);
+            flyTo(entry.position, 42);
+        }
+
+        document.getElementById('insp-close').addEventListener('click', () => {
+            selectedNodeId = null;
+            updateSceneDisplay();
+            updateInspector(null);
+        });
+
+        inspectorPanel.addEventListener('click', (e) => {
+            const chip = e.target.closest('.flow-chip');
+            if (!chip) return;
+            const targetId = chip.getAttribute('data-target');
+            if (targetId) selectAndFocusNode(targetId);
+        });
+
+        document.getElementById('btn-insp-flyto').addEventListener('click', () => {
+            if (selectedNodeId) {
+                const entry = nodeMap.get(selectedNodeId);
+                if (entry) flyTo(entry.position, 38);
+            }
+        });
+
+        const btnIsolate = document.getElementById('btn-insp-isolate');
+        btnIsolate.addEventListener('click', () => {
+            isIsolatedFlow = !isIsolatedFlow;
+            btnIsolate.classList.toggle('active', isIsolatedFlow);
+            updateSceneDisplay();
+        });
+
+        // =========================================================================
+        // 15. RAYCASTER HOVER & CLICKS
+        // =========================================================================
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2(-999, -999);
+        const tooltip = document.getElementById('hover-tooltip');
+
+        window.addEventListener('pointermove', (e) => {
+            pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+            pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(pointer, camera);
+
+            const nodeIntersects = raycaster.intersectObjects(nodeMeshes.filter(m => m.visible), false);
+            if (nodeIntersects.length > 0) {
+                const hitMesh = nodeIntersects[0].object;
+                const id = hitMesh.userData.id;
+                const entry = nodeMap.get(id);
+                const cfg = TIER_CONFIG[entry.node.tier] || TIER_CONFIG.services;
+
+                document.body.style.cursor = 'pointer';
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${e.clientX}px`;
+                tooltip.style.top = `${e.clientY}px`;
+                tooltip.innerHTML = `<strong>${cfg.shapeIcon} ${entry.node.name}</strong> <span style="color:#94a3b8">(${entry.node.tier})</span><br/><span style="color:#818cf8; font-size:9px;">📁 ${entry.node.clusterGroup || '(root)'}</span>`;
+
+                if (!selectedNodeId && hoveredNodeId !== id) {
+                    hoveredNodeId = id;
+                    updateSceneDisplay();
+                    updateInspector(entry);
+                }
+                return;
+            }
+
+            const hubIntersects = raycaster.intersectObjects(hubMeshes.filter(m => m.visible), false);
+            if (hubIntersects.length > 0) {
+                const hitHub = hubIntersects[0].object;
+                const cid = hitHub.userData.clusterId;
+                const cObj = clusterHubs.get(cid);
+
+                document.body.style.cursor = 'pointer';
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${e.clientX}px`;
+                tooltip.style.top = `${e.clientY}px`;
+                tooltip.innerHTML = `<strong>📁 Cluster: ${cObj.cluster.name}</strong> (${cObj.cluster.fileCount} files)<br/><span style="color:#94a3b8; font-size:9px;">Left-Click to expand | Right-Click to collapse</span>`;
+                return;
+            }
+
+            document.body.style.cursor = 'default';
+            tooltip.style.display = 'none';
+            if (!selectedNodeId && hoveredNodeId !== null) {
+                hoveredNodeId = null;
+                updateSceneDisplay();
+                updateInspector(null);
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target.closest('.app-topbar') || e.target.closest('.hud-sidebar') || e.target.closest('.hud-inspector') || e.target.closest('.hud-cycle-banner') || e.target.closest('#btn-expand-sidebar')) return;
+
+            raycaster.setFromCamera(pointer, camera);
+
+            const nodeIntersects = raycaster.intersectObjects(nodeMeshes.filter(m => m.visible), false);
+            if (nodeIntersects.length > 0) {
+                selectAndFocusNode(nodeIntersects[0].object.userData.id);
+                return;
+            }
+
+            const hubIntersects = raycaster.intersectObjects(hubMeshes.filter(m => m.visible), false);
+            if (hubIntersects.length > 0) {
+                const cid = hubIntersects[0].object.userData.clusterId;
+                toggleCluster(cid, true);
+                const cObj = clusterHubs.get(cid);
+                if (cObj) flyTo(cObj.position, 60);
+                return;
+            }
+
+            if (selectedNodeId) {
+                selectedNodeId = null;
+                isIsolatedFlow = false;
+                btnIsolate.classList.remove('active');
+                updateSceneDisplay();
+                updateInspector(null);
+            }
+        });
+
+        window.addEventListener('dblclick', (e) => {
+            if (e.target.closest('.app-topbar') || e.target.closest('.hud-sidebar') || e.target.closest('.hud-inspector')) return;
+            raycaster.setFromCamera(pointer, camera);
+            const intersects = raycaster.intersectObjects(nodeMeshes.filter(m => m.visible), false);
+            if (intersects.length > 0) {
+                selectAndFocusNode(intersects[0].object.userData.id);
+            }
+        });
+
+        // =========================================================================
+        // 16. CONTROLS, AUTO-ROTATE & OFFLINE EXPORT
+        // =========================================================================
+        const btnAutoRotate = document.getElementById('btn-autorotate');
+        btnAutoRotate.addEventListener('click', () => {
+            controls.autoRotate = !controls.autoRotate;
+            btnAutoRotate.classList.toggle('active', controls.autoRotate);
+        });
+
+        document.getElementById('btn-reset-cam').addEventListener('click', () => {
+            selectedNodeId = null;
+            hoveredNodeId = null;
+            isIsolatedFlow = false;
+            btnIsolate.classList.remove('active');
+            updateSceneDisplay();
+            updateInspector(null);
+
+            camStartPos.copy(camera.position);
+            ctrlStartTarget.copy(controls.target);
+            camTargetPos.set(0, 130, 240);
+            ctrlEndTarget.set(0, 0, 0);
+            camFlyProgress = 0;
+            isCameraFlying = true;
+            zoomVelocity = 0;
+        });
+
+        document.getElementById('btn-export').addEventListener('click', () => {
+            const cloneDoc = document.documentElement.cloneNode(true);
+            const canvasEl = cloneDoc.querySelector('#canvas-container');
+            if (canvasEl) canvasEl.innerHTML = '';
+
+            const scriptEl = cloneDoc.querySelector('#zaarvy-graph-script');
+            if (scriptEl) {
+                scriptEl.textContent = `window.__ZAARVY_GRAPH_DATA__ = ${JSON.stringify(graphData)};`;
+            }
+
+            const serialized = '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
+            const blob = new Blob([serialized], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${graphData.projectName || 'zaarvy'}-architecture-3d.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // =========================================================================
+        // 17. ANIMATION LOOP (60+ FPS)
+        // =========================================================================
+        const clock = new THREE.Clock();
+        const tempVec = new THREE.Vector3();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const dt = Math.min(clock.getDelta(), 0.06);
+            const elapsedTime = clock.getElapsedTime();
+            starMat.uniforms.uTime.value = elapsedTime;
+
+            if (isCameraFlying && camFlyProgress < 1) {
+                camFlyProgress += 0.038;
+                const t = Math.min(1, camFlyProgress);
+                const ease = 1 - Math.pow(1 - t, 3);
+                camera.position.lerpVectors(camStartPos, camTargetPos, ease);
+                controls.target.lerpVectors(ctrlStartTarget, ctrlEndTarget, ease);
+                if (camFlyProgress >= 1) isCameraFlying = false;
+            }
+
+            if (clusterAnimQueue.length > 0) {
+                for (let i = clusterAnimQueue.length - 1; i >= 0; i--) {
+                    const item = clusterAnimQueue[i];
+                    item.progress += 0.055;
+                    const t = Math.min(1, item.progress);
+                    const ease = 1 - Math.pow(1 - t, 3);
+                    item.entry.mesh.position.lerpVectors(item.startPos, item.endPos, ease);
+                    if (item.progress >= 1) {
+                        clusterAnimQueue.splice(i, 1);
+                    }
+                }
+            }
+
+            nodeMeshes.forEach(m => {
+                if (m.visible && m.userData.rotSpeedY) {
+                    m.rotation.y += m.userData.rotSpeedY;
+                    m.rotation.x += m.userData.rotSpeedX;
+                }
+            });
+
+            hubMeshes.forEach(hm => {
+                hm.rotation.y += 0.005;
+            });
+
+            if (pulseMeta.length > 0 && flowSpeedMultiplier > 0) {
+                const posAttr = pulseGeo.attributes.position;
+                for (let i = 0; i < pulseMeta.length; i++) {
+                    const p = pulseMeta[i];
+                    const speed = p.speed * flowSpeedMultiplier * (p.edgeObj.isCycle ? 2.2 : 1.0);
+
+                    if (flowDirection === 'imports') {
+                        p.progress += speed;
+                        if (p.progress > 1) p.progress -= 1;
+                    } else {
+                        p.progress -= speed;
+                        if (p.progress < 0) p.progress += 1;
+                    }
+
+                    p.edgeObj.curve.getPoint(p.progress, tempVec);
+                    posAttr.setXYZ(i, tempVec.x, tempVec.y, tempVec.z);
+                }
+                posAttr.needsUpdate = true;
+            }
+
+            coreLight.intensity = 3.6 + Math.sin(elapsedTime * 2.2) * 0.9;
+
+            // Physics-Damped Continuous Smooth Zoom
+            if (Math.abs(zoomVelocity) > 0.00002 && !isCameraFlying) {
+                const offset = camera.position.clone().sub(controls.target);
+                const currentDist = offset.length();
+
+                if (currentDist > 0.001) {
+                    const factor = Math.exp(zoomVelocity);
+                    const newDist = Math.max(controls.minDistance, Math.min(controls.maxDistance, currentDist * factor));
+                    offset.normalize().multiplyScalar(newDist);
+                    camera.position.copy(controls.target).add(offset);
+                }
+
+                // Decay velocity with frame-rate independent exponential friction
+                const friction = Math.exp(-9.2 * dt);
+                zoomVelocity *= friction;
+                if (Math.abs(zoomVelocity) < 0.00002) {
+                    zoomVelocity = 0;
+                }
+            }
+
+            // Update rotation damping, auto-rotation, and lookAt in controls AFTER zoom
+            controls.update();
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>

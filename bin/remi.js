@@ -13,6 +13,7 @@ import { scheduleCommand } from '../src/commands/schedule.js';
 import { syncCommand } from '../src/commands/sync.js';
 import { standupCommand } from '../src/commands/standup.js';
 import { statsCommand } from '../src/commands/stats.js';
+import { orbitCommand } from '../src/commands/orbit.js';
 
 let version = '1.0.1';
 try {
@@ -82,6 +83,24 @@ Examples:
 `)
   .action(async () => {
     await graphCommand();
+  });
+
+// orbit (alias: arch)
+program
+  .command('orbit [directory]')
+  .alias('arch')
+  .description('Launch the 3D Orbital Architecture & Dependency Visualizer in browser')
+  .option('-p, --port <number>', 'Port to run the visualizer server (default: 3333)', '3333')
+  .option('--no-open', 'Do not automatically open the browser')
+  .addHelpText('after', `
+Examples:
+  $ zaarvy-remi orbit
+  $ remi orbit .
+  $ remi arch /path/to/project --port 4000
+  $ remi orbit --no-open
+`)
+  .action(async (directory, options) => {
+    await orbitCommand(directory, options);
   });
 
 // export
@@ -220,7 +239,8 @@ ${chalk.bold.yellow('Workflow Examples:')}
   ${chalk.bold('3. Insights & Reporting:')}
     $ zaarvy-remi standup --days 1                         ${chalk.gray('# Daily standup report')}
     $ zaarvy-remi stats                                    ${chalk.gray('# View coding streak & 30-day heatmap')}
-    $ zaarvy-remi graph                                    ${chalk.gray('# Open interactive D3 knowledge graph')}
+    $ zaarvy-remi graph                                    ${chalk.gray('# Open interactive 2D D3 work history graph')}
+    $ zaarvy-remi orbit .                                  ${chalk.gray('# Launch 3D Orbital codebase architecture visualizer')}
     $ zaarvy-remi search "auth"                            ${chalk.gray('# Full-text search across all logs')}
 
 ${chalk.bold.yellow('Tips:')}
