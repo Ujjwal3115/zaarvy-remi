@@ -43,26 +43,26 @@
 
         [data-theme="light"] {
             --bg-deep: #f8fafc;
-            --glass-bg: rgba(255, 255, 255, 0.92);
-            --glass-border: rgba(15, 23, 42, 0.15);
-            --glass-highlight: rgba(208, 208, 45, 0.35);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --card-border: rgba(15, 23, 42, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.94);
+            --glass-border: rgba(15, 23, 42, 0.16);
+            --glass-highlight: rgba(161, 98, 7, 0.25);
+            --card-bg: rgba(255, 255, 255, 0.97);
+            --card-border: rgba(15, 23, 42, 0.14);
             --text-primary: #0f172a;
-            --text-muted: #475569;
+            --text-muted: #334155;
             --dot-color: rgba(15, 23, 42, 0.28);
 
-            --tier-entry: #b5b515;
+            --tier-entry: #857700;
             --tier-routes: #0284c7;
-            --tier-components: #0d9488;
-            --tier-services: #d97706;
-            --tier-utils: #059669;
+            --tier-components: #0f766e;
+            --tier-services: #b45309;
+            --tier-utils: #047857;
 
             --flow-upstream: #0284c7;
-            --flow-downstream: #b5b515;
-            --color-cycle: #dc2626;
-            --color-orphan: #64748b;
-            --color-blast: #ea580c;
+            --flow-downstream: #857700;
+            --color-cycle: #b91c1c;
+            --color-orphan: #475569;
+            --color-blast: #c2410c;
         }
 
         .material-symbols-outlined {
@@ -124,23 +124,33 @@
         }
 
         .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            cursor: pointer;
+        }
+
+        .brand-logo {
+            height: 28px;
+            width: 28px;
+            border-radius: 6px;
+            object-fit: contain;
+            display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .brand-text {
             font-size: 13px;
             font-weight: 800;
             letter-spacing: 0.8px;
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
         }
 
-        .brand-badge {
-            background: var(--accent);
-            color: var(--accent-text);
-            font-size: 10px;
-            font-weight: 800;
-            padding: 2px 7px;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
+        .brand-text span {
+            color: var(--accent);
         }
 
         .project-badge {
@@ -1017,8 +1027,8 @@
     <header class="app-topbar">
         <div class="topbar-left">
             <div class="brand-title">
-                <span class="brand-badge">ZAARVY</span>
-                <span>REMI ORBIT</span>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAakAAAHNCAYAAACkSYQXAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAByZJREFUeAHt18FJBFEQRdFqmXQafv5RfOiAWlwL4rjQO3JODEVd3rH3ec8LW+s6BoBPXv2/f3gbAIgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMh6DDxp7/MeeNJa1zHwJEsKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgKxj7/MeAAiypADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAskQKgCyRAiBLpADIEikAsh7Dr1vrOuYf2Pu8B77BzfNTlhQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZB17H3eAwBBlhQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkHfPC9j7vAeBLa10v++stKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMgSKQCyRAqALJECIEukAMh6DH9uresYIGnv8x7+jCUFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkiRQAWSIFQJZIAZAlUgBkvQNPdiQBm9apswAAAABJRU5ErkJggg==" class="brand-logo" alt="REMI Logo" />
+                <span class="brand-text">REMI <span>ORBIT</span></span>
             </div>
             <div class="project-badge" id="hud-project-name">project</div>
             <div class="topbar-stats">
@@ -1357,11 +1367,11 @@
         // 2. TIER CONFIGURATION & GEOMETRIES
         // =========================================================================
         const TIER_CONFIG = {
-            entry: { color: 0xD0D02D, hex: '#D0D02D', label: 'ENTRY', shapeIcon: '◆', shapeName: 'Octahedron' },
-            routes: { color: 0x38bdf8, hex: '#38bdf8', label: 'ROUTES', shapeIcon: '⬢', shapeName: 'Hex Prism' },
-            components: { color: 0x2dd4bf, hex: '#2dd4bf', label: 'COMPONENTS', shapeIcon: '■', shapeName: 'Tech Cube' },
-            services: { color: 0xf59e0b, hex: '#f59e0b', label: 'SERVICES', shapeIcon: '◈', shapeName: 'Icosahedron' },
-            utils: { color: 0x10b981, hex: '#10b981', label: 'UTILS', shapeIcon: '▲', shapeName: 'Pyramid' }
+            entry: { color: 0xD0D02D, lightColor: 0x857700, hex: '#D0D02D', lightHex: '#857700', label: 'ENTRY', shapeIcon: '◆', shapeName: 'Octahedron' },
+            routes: { color: 0x38bdf8, lightColor: 0x0284c7, hex: '#38bdf8', lightHex: '#0284c7', label: 'ROUTES', shapeIcon: '⬢', shapeName: 'Hex Prism' },
+            components: { color: 0x2dd4bf, lightColor: 0x0f766e, hex: '#2dd4bf', lightHex: '#0f766e', label: 'COMPONENTS', shapeIcon: '■', shapeName: 'Tech Cube' },
+            services: { color: 0xf59e0b, lightColor: 0xb45309, hex: '#f59e0b', lightHex: '#b45309', label: 'SERVICES', shapeIcon: '◈', shapeName: 'Icosahedron' },
+            utils: { color: 0x10b981, lightColor: 0x047857, hex: '#10b981', lightHex: '#047857', label: 'UTILS', shapeIcon: '▲', shapeName: 'Pyramid' }
         };
 
         const GEOMETRIES = {
@@ -1862,6 +1872,7 @@
         }
 
         function updateSceneDisplay() {
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
             const activeId = selectedNodeId || hoveredNodeId;
             const hasFocus = Boolean(activeId);
             const activeEntry = hasFocus ? nodeMap.get(activeId) : null;
@@ -1924,73 +1935,124 @@
                 entry.mesh.visible = isVisible;
                 if (!isVisible) return;
 
+                const cfg = TIER_CONFIG[entry.node.tier] || TIER_CONFIG.services;
+                const nodeColor = isLight ? (cfg.lightColor || cfg.color) : cfg.color;
+
                 if (isCyclesMode) {
+                    const cColor = isLight ? 0xb91c1c : 0xef4444;
                     entry.mesh.material.opacity = 1.0;
-                    entry.mesh.material.emissiveIntensity = 2.5;
-                    entry.mesh.material.color.copy(cycleColor);
-                    entry.mesh.material.emissive.copy(cycleColor);
-                    entry.sprite.material.opacity = 0.95;
-                    entry.sprite.material.color.copy(cycleColor);
+                    entry.mesh.material.color.setHex(cColor);
+                    entry.mesh.material.emissive.setHex(isLight ? 0x000000 : cColor);
+                    entry.mesh.material.emissiveIntensity = isLight ? 0.2 : 2.5;
+                    entry.sprite.visible = !isLight;
+                    if (!isLight) {
+                        entry.sprite.material.opacity = 0.95;
+                        entry.sprite.material.color.setHex(cColor);
+                    }
                     entry.mesh.scale.setScalar(entry.baseScale * 1.35);
                 } else if (isOrphansMode) {
+                    const oColor = isLight ? 0x475569 : 0x94a3b8;
                     entry.mesh.material.opacity = 1.0;
-                    entry.mesh.material.emissiveIntensity = 2.2;
-                    entry.mesh.material.color.copy(orphanColor);
-                    entry.mesh.material.emissive.copy(orphanColor);
-                    entry.sprite.material.opacity = 0.95;
-                    entry.sprite.material.color.copy(orphanColor);
+                    entry.mesh.material.color.setHex(oColor);
+                    entry.mesh.material.emissive.setHex(isLight ? 0x000000 : oColor);
+                    entry.mesh.material.emissiveIntensity = isLight ? 0.15 : 2.2;
+                    entry.sprite.visible = !isLight;
+                    if (!isLight) {
+                        entry.sprite.material.opacity = 0.95;
+                        entry.sprite.material.color.setHex(oColor);
+                    }
                     entry.mesh.scale.setScalar(entry.baseScale * 1.3);
                 } else if (hasFocus) {
                     if (isPrimary) {
                         entry.mesh.material.opacity = 1.0;
-                        entry.mesh.material.emissiveIntensity = 2.6;
-                        entry.sprite.material.opacity = 1.0;
+                        entry.mesh.material.color.setHex(nodeColor);
+                        entry.mesh.material.emissive.setHex(nodeColor);
+                        entry.mesh.material.emissiveIntensity = isLight ? 0.35 : 2.6;
+                        entry.sprite.visible = !isLight;
+                        if (!isLight) {
+                            entry.sprite.material.opacity = 1.0;
+                            entry.sprite.material.color.setHex(nodeColor);
+                        }
                         entry.mesh.scale.setScalar(entry.baseScale * 1.4);
                     } else if (isBlastAffected) {
+                        const bColor = isLight ? 0xc2410c : 0xf97316;
                         entry.mesh.material.opacity = 1.0;
-                        entry.mesh.material.emissiveIntensity = 2.2;
-                        entry.mesh.material.color.copy(blastColor);
-                        entry.mesh.material.emissive.copy(blastColor);
-                        entry.sprite.material.opacity = 0.9;
-                        entry.sprite.material.color.copy(blastColor);
+                        entry.mesh.material.color.setHex(bColor);
+                        entry.mesh.material.emissive.setHex(isLight ? 0x000000 : bColor);
+                        entry.mesh.material.emissiveIntensity = isLight ? 0.25 : 2.2;
+                        entry.sprite.visible = !isLight;
+                        if (!isLight) {
+                            entry.sprite.material.opacity = 0.9;
+                            entry.sprite.material.color.setHex(bColor);
+                        }
                         entry.mesh.scale.setScalar(entry.baseScale * 1.25);
                     } else if (isUpstream) {
+                        const uColor = isLight ? 0x0284c7 : 0x06b6d4;
                         entry.mesh.material.opacity = 0.95;
-                        entry.mesh.material.emissiveIntensity = 1.8;
-                        entry.mesh.material.color.copy(upstreamColor);
-                        entry.mesh.material.emissive.copy(upstreamColor);
-                        entry.sprite.material.opacity = 0.85;
+                        entry.mesh.material.color.setHex(uColor);
+                        entry.mesh.material.emissive.setHex(isLight ? 0x000000 : uColor);
+                        entry.mesh.material.emissiveIntensity = isLight ? 0.25 : 1.8;
+                        entry.sprite.visible = !isLight;
+                        if (!isLight) {
+                            entry.sprite.material.opacity = 0.85;
+                            entry.sprite.material.color.setHex(uColor);
+                        }
                         entry.mesh.scale.setScalar(entry.baseScale * 1.18);
                     } else {
-                        entry.mesh.material.opacity = 0.08;
-                        entry.mesh.material.emissiveIntensity = 0.05;
-                        entry.sprite.material.opacity = 0.03;
+                        entry.mesh.material.opacity = isLight ? 0.12 : 0.08;
+                        entry.mesh.material.color.setHex(nodeColor);
+                        entry.mesh.material.emissiveIntensity = 0.02;
+                        entry.sprite.visible = false;
                         entry.mesh.scale.setScalar(entry.baseScale * 0.82);
                     }
                 } else if (hasSearch || hasTierFilter) {
                     const match = matchesSearch && matchesTier;
-                    entry.mesh.material.opacity = match ? 1.0 : 0.08;
-                    entry.mesh.material.emissiveIntensity = match ? 1.5 : 0.05;
-                    entry.sprite.material.opacity = match ? 0.8 : 0.02;
+                    entry.mesh.material.opacity = match ? 1.0 : (isLight ? 0.12 : 0.08);
+                    entry.mesh.material.color.setHex(nodeColor);
+                    entry.mesh.material.emissive.setHex(isLight ? 0x000000 : nodeColor);
+                    entry.mesh.material.emissiveIntensity = match ? (isLight ? 0.25 : 1.5) : 0.02;
+                    entry.sprite.visible = match && !isLight;
+                    if (!isLight) {
+                        entry.sprite.material.opacity = match ? 0.8 : 0.02;
+                        entry.sprite.material.color.setHex(nodeColor);
+                    }
                     entry.mesh.scale.setScalar(match ? entry.baseScale * 1.15 : entry.baseScale * 0.8);
                 } else {
-                    const cfg = TIER_CONFIG[entry.node.tier] || TIER_CONFIG.services;
+                    // Normal default state
                     entry.mesh.material.opacity = 1.0;
-                    entry.mesh.material.color.setHex(cfg.color);
-                    entry.mesh.material.emissive.setHex(cfg.color);
-                    entry.mesh.material.emissiveIntensity = entry.node.tier === 'entry' ? 1.3 : 0.7;
-                    entry.sprite.material.opacity = entry.node.tier === 'entry' ? 0.9 : 0.52;
-                    entry.sprite.material.color.setHex(cfg.color);
+                    entry.mesh.material.color.setHex(nodeColor);
+                    entry.mesh.material.emissive.setHex(isLight ? 0x000000 : nodeColor);
+                    entry.mesh.material.emissiveIntensity = isLight ? 0.12 : (entry.node.tier === 'entry' ? 1.3 : 0.7);
+                    // Hide big white glowing halos in light mode
+                    entry.sprite.visible = !isLight;
+                    if (!isLight) {
+                        entry.sprite.material.opacity = entry.node.tier === 'entry' ? 0.9 : 0.52;
+                        entry.sprite.material.color.setHex(nodeColor);
+                    }
                     entry.mesh.scale.setScalar(entry.baseScale);
+                }
+
+                // Crisp, prominent wireframe outlines on 3D geometric facets
+                if (entry.wireLines && entry.wireLines.material) {
+                    entry.wireLines.material.color.setHex(isLight ? 0x0f172a : 0xffffff);
+                    entry.wireLines.material.opacity = isLight ? 0.45 : 0.28;
+                    entry.wireLines.material.needsUpdate = true;
                 }
             });
 
-            // Edge visibility
+            // Edge visibility & prominent contrast in light mode
             edgeObjects.forEach((edgeObj) => {
                 const srcEntry = nodeMap.get(edgeObj.sourceId);
                 const tgtEntry = nodeMap.get(edgeObj.targetId);
                 const srcVis = srcEntry && srcEntry.mesh.visible;
                 const tgtVis = tgtEntry && tgtEntry.mesh.visible;
+
+                const srcTier = srcEntry?.node.tier || 'services';
+                const cfg = TIER_CONFIG[srcTier] || TIER_CONFIG.services;
+                const edgeNormalColor = isLight ? (edgeObj.isCycle ? 0xb91c1c : (cfg.lightColor || cfg.color)) : (edgeObj.isCycle ? 0xef4444 : cfg.color);
+
+                // Normal blending in light mode prevents white wash-out
+                edgeObj.lineMat.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
 
                 if (isCyclesMode) {
                     const activeCycle = cyclesList[activeCycleIdx];
@@ -2006,7 +2068,7 @@
                     }
                     edgeObj.line.visible = isPart;
                     edgeObj.lineMat.opacity = isPart ? 0.95 : 0.02;
-                    edgeObj.lineMat.color.copy(cycleColor);
+                    edgeObj.lineMat.color.setHex(isLight ? 0xb91c1c : 0xef4444);
                 } else if (isOrphansMode) {
                     edgeObj.line.visible = false;
                 } else if (hasFocus) {
@@ -2016,22 +2078,24 @@
                     if (isUp) {
                         edgeObj.line.visible = srcVis && tgtVis;
                         edgeObj.lineMat.opacity = 0.95;
-                        edgeObj.lineMat.color.copy(upstreamColor);
+                        edgeObj.lineMat.color.setHex(isLight ? 0x0284c7 : 0x06b6d4);
                     } else if (isBlastEdge) {
                         edgeObj.line.visible = srcVis && tgtVis;
                         edgeObj.lineMat.opacity = 0.95;
-                        edgeObj.lineMat.color.copy(blastColor);
+                        edgeObj.lineMat.color.setHex(isLight ? 0xc2410c : 0xf97316);
                     } else {
                         edgeObj.line.visible = !isIsolatedFlow && srcVis && tgtVis;
-                        edgeObj.lineMat.opacity = 0.02;
-                        edgeObj.lineMat.color.copy(edgeObj.baseColor);
+                        edgeObj.lineMat.opacity = isLight ? 0.06 : 0.02;
+                        edgeObj.lineMat.color.setHex(edgeNormalColor);
                     }
                 } else {
                     const visible = srcVis && tgtVis;
                     edgeObj.line.visible = visible;
-                    edgeObj.lineMat.opacity = visible ? 0.22 : 0.02;
-                    edgeObj.lineMat.color.copy(edgeObj.baseColor);
+                    // In light mode: use 0.60 opacity so edges are prominent and crisp!
+                    edgeObj.lineMat.opacity = visible ? (isLight ? 0.60 : 0.22) : 0.02;
+                    edgeObj.lineMat.color.setHex(edgeNormalColor);
                 }
+                edgeObj.lineMat.needsUpdate = true;
             });
 
             // Cluster Hub visibility
@@ -2040,11 +2104,11 @@
                 c.labelSprite.visible = showClusterHubs;
                 c.haloRing.visible = showClusterHubs;
                 if (!c.isExpanded) {
-                    c.hubMesh.material.emissiveIntensity = 1.4;
-                    c.haloRing.material.opacity = 0.7;
+                    c.hubMesh.material.emissiveIntensity = isLight ? 0.4 : 1.4;
+                    c.haloRing.material.opacity = isLight ? 0.6 : 0.7;
                 } else {
-                    c.hubMesh.material.emissiveIntensity = 0.75;
-                    c.haloRing.material.opacity = 0.25;
+                    c.hubMesh.material.emissiveIntensity = isLight ? 0.2 : 0.75;
+                    c.haloRing.material.opacity = isLight ? 0.35 : 0.25;
                 }
             });
         }
@@ -2662,35 +2726,26 @@
                 scene.background.setHex(bgHex);
                 if (scene.fog) {
                     scene.fog.color.setHex(bgHex);
-                    scene.fog.density = isLight ? 0.0008 : 0.0014;
+                    scene.fog.density = isLight ? 0.0006 : 0.0014;
                 }
             }
             if (ambientLight) {
-                ambientLight.intensity = isLight ? 1.05 : 0.65;
+                ambientLight.intensity = isLight ? 1.15 : 0.65;
                 ambientLight.color.setHex(isLight ? 0xffffff : 0xf1f5f9);
             }
             if (dirLight) {
-                dirLight.intensity = isLight ? 0.85 : 0.7;
+                dirLight.intensity = isLight ? 0.95 : 0.7;
             }
-            if (starMat && starMat.uniforms && starMat.uniforms.uColor) {
-                starMat.uniforms.uColor.value.setHex(isLight ? 0x94a3b8 : 0xD0D02D);
+            if (typeof starField !== 'undefined' && starField) {
+                starField.visible = !isLight;
             }
-            if (typeof edgeObjects !== 'undefined' && edgeObjects.length > 0) {
-                edgeObjects.forEach(e => {
-                    if (e.lineMat) {
-                        e.lineMat.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
-                        e.lineMat.opacity = e.isCycle ? (isLight ? 0.95 : 0.85) : (isLight ? 0.35 : 0.22);
-                        e.lineMat.needsUpdate = true;
-                    }
-                });
+            if (typeof pulseMat !== 'undefined' && pulseMat) {
+                pulseMat.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+                pulseMat.size = isLight ? 4.2 : 3.8;
+                pulseMat.needsUpdate = true;
             }
-            if (typeof nodeMap !== 'undefined' && nodeMap.size > 0) {
-                nodeMap.forEach(e => {
-                    if (e.sprite && e.sprite.material) {
-                        e.sprite.material.opacity = isLight ? 0.25 : (e.node.tier === 'entry' ? 0.9 : 0.52);
-                        e.sprite.material.needsUpdate = true;
-                    }
-                });
+            if (typeof updateSceneDisplay === 'function') {
+                updateSceneDisplay();
             }
         }
 
