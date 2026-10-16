@@ -1,28 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Google Material Symbols Outlined -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
     <title>ZAARVY-ARCH // 3D Orbital Architecture Visualizer</title>
     <style>
         :root {
-            --bg-deep: #020206;
-            --glass-bg: rgba(9, 11, 24, 0.88);
+            --accent: #D0D02D;
+            --accent-hover: #b8b81d;
+            --accent-text: #0f172a;
+
+            /* Dark Theme Defaults - Matching REMI Graph */
+            --bg-deep: #0a0c12;
+            --glass-bg: rgba(15, 20, 32, 0.88);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-highlight: rgba(99, 102, 241, 0.45);
-            --text-primary: #f8fafc;
+            --glass-highlight: rgba(208, 208, 45, 0.25);
+            --card-bg: rgba(26, 34, 50, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
             --text-muted: #94a3b8;
-            --tier-entry: #fbbf24;
-            --tier-routes: #f43f5e;
-            --tier-components: #38bdf8;
-            --tier-services: #a855f7;
+            --dot-color: rgba(255, 255, 255, 0.22);
+
+            /* REMI Signature Tier Colors (No royal blue / purple) */
+            --tier-entry: #D0D02D;
+            --tier-routes: #38bdf8;
+            --tier-components: #2dd4bf;
+            --tier-services: #f59e0b;
             --tier-utils: #10b981;
-            --flow-upstream: #06b6d4;
-            --flow-downstream: #f59e0b;
+
+            --flow-upstream: #38bdf8;
+            --flow-downstream: #D0D02D;
             --color-cycle: #ef4444;
-            --color-orphan: #c084fc;
+            --color-orphan: #94a3b8;
             --color-blast: #f97316;
+        }
+
+        [data-theme="light"] {
+            --bg-deep: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --glass-border: rgba(15, 23, 42, 0.15);
+            --glass-highlight: rgba(208, 208, 45, 0.35);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(15, 23, 42, 0.12);
+            --text-primary: #0f172a;
+            --text-muted: #475569;
+            --dot-color: rgba(15, 23, 42, 0.28);
+
+            --tier-entry: #b5b515;
+            --tier-routes: #0284c7;
+            --tier-components: #0d9488;
+            --tier-services: #d97706;
+            --tier-utils: #059669;
+
+            --flow-upstream: #0284c7;
+            --flow-downstream: #b5b515;
+            --color-cycle: #dc2626;
+            --color-orphan: #64748b;
+            --color-blast: #ea580c;
+        }
+
+        .material-symbols-outlined {
+            font-size: 18px;
+            vertical-align: middle;
+            user-select: none;
+            line-height: 1;
         }
 
         * {
@@ -58,7 +105,7 @@
             right: 0;
             height: 52px;
             z-index: 100;
-            background: rgba(8, 10, 22, 0.88);
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
@@ -77,15 +124,23 @@
         }
 
         .brand-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
-            letter-spacing: 1.4px;
-            background: linear-gradient(90deg, #fff, #818cf8, #38bdf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.8px;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+        }
+
+        .brand-badge {
+            background: var(--accent);
+            color: var(--accent-text);
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
         }
 
         .project-badge {
@@ -93,10 +148,10 @@
             font-weight: 600;
             padding: 3px 8px;
             border-radius: 6px;
-            background: rgba(99, 102, 241, 0.18);
-            border: 1px solid rgba(99, 102, 241, 0.4);
-            color: #c7d2fe;
-            max-width: 130px;
+            background: rgba(208, 208, 45, 0.12);
+            border: 1px solid rgba(208, 208, 45, 0.35);
+            color: var(--text-primary);
+            max-width: 140px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -148,16 +203,17 @@
         }
 
         .btn:hover {
-            background: rgba(99, 102, 241, 0.25);
-            border-color: #818cf8;
+            background: rgba(208, 208, 45, 0.15);
+            border-color: var(--accent);
+            color: var(--text-primary);
             transform: translateY(-1px);
         }
 
         .btn.active {
-            background: rgba(99, 102, 241, 0.35);
-            border-color: #818cf8;
-            color: #fff;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+            background: rgba(208, 208, 45, 0.22);
+            border-color: var(--accent);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(208, 208, 45, 0.25);
         }
 
         .btn-group {
@@ -181,24 +237,28 @@
         }
 
         .btn-group .btn:hover {
-            background: rgba(99, 102, 241, 0.25);
+            background: rgba(208, 208, 45, 0.18);
             transform: none;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: var(--accent);
+            color: var(--accent-text);
+            border-color: var(--accent);
+            font-weight: 700;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            box-shadow: 0 0 16px rgba(99, 102, 241, 0.6);
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+            color: var(--accent-text);
+            box-shadow: 0 0 14px rgba(208, 208, 45, 0.4);
         }
 
         .select-custom {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            color: #fff;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
             padding: 6px 8px;
             border-radius: 7px;
             font-size: 11px;
@@ -211,8 +271,8 @@
 
         .select-custom:hover,
         .select-custom:focus {
-            border-color: #818cf8;
-            background: rgba(10, 14, 32, 0.85);
+            border-color: var(--accent);
+            background: var(--card-bg);
         }
 
         /* =========================================================================
@@ -341,10 +401,10 @@
         }
 
         .util-toggle-btn.active-orphans {
-            background: rgba(192, 132, 252, 0.22);
-            border-color: #c084fc;
-            color: #e9d5ff;
-            box-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
+            background: rgba(148, 163, 184, 0.22);
+            border-color: var(--color-orphan);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(148, 163, 184, 0.35);
         }
 
         .util-toggle-btn.active-clusters {
@@ -387,10 +447,10 @@
         }
 
         .tier-pill.active {
-            background: rgba(99, 102, 241, 0.25);
-            border-color: #818cf8;
-            color: #fff;
-            box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+            background: rgba(208, 208, 45, 0.18);
+            border-color: var(--accent);
+            color: var(--text-primary);
+            box-shadow: 0 0 8px rgba(208, 208, 45, 0.25);
         }
 
         /* Search Box */
@@ -415,20 +475,20 @@
 
         .search-input {
             width: 100%;
-            background: rgba(0, 0, 0, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
             border-radius: 7px;
             padding: 8px 30px 8px 30px;
-            color: #fff;
+            color: var(--text-primary);
             font-size: 11px;
             outline: none;
             transition: all 0.2s ease;
         }
 
         .search-input:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
-            background: rgba(0, 0, 0, 0.7);
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(208, 208, 45, 0.25);
+            background: var(--card-bg);
         }
 
         .search-clear-btn {
@@ -460,8 +520,8 @@
 
         /* Search Results inside sidebar (In-Flow, NOT overlapping) */
         .search-results-container {
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 8px;
             max-height: 200px;
             overflow-y: auto;
@@ -497,7 +557,7 @@
 
         .search-result-item:hover,
         .search-result-item.highlighted {
-            background: rgba(99, 102, 241, 0.22);
+            background: rgba(208, 208, 45, 0.15);
         }
 
         .result-shape-icon {
@@ -522,8 +582,8 @@
         }
 
         .result-name-row mark {
-            background: rgba(99, 102, 241, 0.4);
-            color: #fff;
+            background: rgba(208, 208, 45, 0.3);
+            color: var(--text-primary);
             padding: 0 2px;
             border-radius: 2px;
         }
@@ -881,9 +941,9 @@
         }
 
         .flow-chip:hover {
-            border-color: #818cf8;
-            color: #fff;
-            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(208, 208, 45, 0.15);
         }
 
         .flow-chip.upstream {
@@ -956,71 +1016,80 @@
     <!-- 1. UNIFIED APPLICATION TOPBAR -->
     <header class="app-topbar">
         <div class="topbar-left">
-            <div class="brand-title">✦ ZAARVY-ARCH</div>
+            <div class="brand-title">
+                <span class="brand-badge">ZAARVY</span>
+                <span>REMI ORBIT</span>
+            </div>
             <div class="project-badge" id="hud-project-name">project</div>
             <div class="topbar-stats">
                 <span class="stat-pill">Files: <b id="hud-total-files">0</b></span>
                 <span class="stat-pill">Deps: <b id="hud-total-deps">0</b></span>
                 <span class="stat-pill">Clusters: <b id="hud-total-clusters">0</b></span>
-                <span class="stat-pill">Score: <b id="hud-complexity">0</b></span>
+                <span class="stat-pill">Complexity: <b id="hud-complexity">0</b></span>
             </div>
         </div>
 
         <div class="topbar-right">
+            <!-- Theme Toggle Button -->
+            <button id="btn-theme-toggle" class="btn" title="Toggle Theme (Light / Dark)">
+                <span class="material-symbols-outlined">light_mode</span>
+                <span id="theme-label">Light</span>
+            </button>
+
             <!-- Expand/Collapse Clusters Toggle -->
             <button id="btn-toggle-all-clusters" class="btn" title="Expand or Collapse All 3D Clusters">
-                <span>⊞</span> Clusters
+                <span class="material-symbols-outlined">hub</span> Clusters
             </button>
 
             <!-- Node Shape Selector -->
             <select id="select-shape-mode" class="select-custom" title="Change Node 3D Shapes">
-                <option value="polyhedra">✦ Tier Shapes</option>
-                <option value="cubes">▧ Tech Cubes</option>
-                <option value="hex">⬡ Hex Prisms</option>
-                <option value="spheres">● Spheres</option>
+                <option value="polyhedra">Polyhedra</option>
+                <option value="cubes">Tech Cubes</option>
+                <option value="hex">Hex Prisms</option>
+                <option value="spheres">Spheres</option>
             </select>
 
             <!-- Flow Direction Selector -->
             <select id="select-flow-mode" class="select-custom" title="Dependency Flow Direction">
-                <option value="imports">⇄ Imports</option>
-                <option value="data">⇄ Data Flow</option>
+                <option value="imports">Imports</option>
+                <option value="data">Data Flow</option>
             </select>
 
             <!-- Flow Speed Toggle -->
             <button id="btn-flow-speed" class="btn active" title="Toggle Flow Animation Speed">
-                <span>⚡</span> 1x
+                <span class="material-symbols-outlined">speed</span> <span id="flow-speed-text">1x</span>
             </button>
 
             <!-- Auto-Orbit -->
             <button id="btn-autorotate" class="btn active" title="Toggle Orbital Auto-Rotation">
-                <span>↻</span> Orbit
+                <span class="material-symbols-outlined">sync</span> Orbit
             </button>
 
             <!-- Zoom & Reset View Button Group -->
             <div class="btn-group" title="Camera Zoom Controls">
-                <button id="btn-zoom-in" class="btn" title="Zoom In (+)"><span>＋</span></button>
-                <button id="btn-zoom-out" class="btn" title="Zoom Out (−)"><span>－</span></button>
-                <button id="btn-reset-cam" class="btn" title="Reset View (⤢)"><span>⤢</span></button>
+                <button id="btn-zoom-in" class="btn" title="Zoom In"><span class="material-symbols-outlined">add</span></button>
+                <button id="btn-zoom-out" class="btn" title="Zoom Out"><span class="material-symbols-outlined">remove</span></button>
+                <button id="btn-reset-cam" class="btn" title="Reset View"><span class="material-symbols-outlined">restart_alt</span></button>
             </div>
 
             <!-- Standalone HTML Export -->
-            <button id="btn-export" class="btn btn-primary" title="Download single offline HTML file">
-                <span>⬇</span> HTML
+            <button id="btn-export" class="btn btn-primary" title="Download standalone offline HTML file">
+                <span class="material-symbols-outlined">download</span> Export
             </button>
         </div>
     </header>
 
     <!-- Sidebar Open Button (When Sidebar Collapsed) -->
     <button id="btn-expand-sidebar" title="Open Explorer Sidebar">
-        <span>☰</span> Explorer
+        <span class="material-symbols-outlined">menu</span> Explorer
     </button>
 
     <!-- 2. UNIFIED LEFT SIDEBAR -->
     <aside class="hud-sidebar" id="hud-sidebar">
         <div class="sidebar-header">
-            <span class="sidebar-title">✦ ARCHITECTURE EXPLORER</span>
+            <span class="sidebar-title">ARCHITECTURE EXPLORER</span>
             <button id="btn-collapse-sidebar" class="btn" style="padding:3px 6px; font-size:10px;" title="Collapse Sidebar">
-                <span>◀</span>
+                <span class="material-symbols-outlined">chevron_left</span>
             </button>
         </div>
 
@@ -1028,33 +1097,33 @@
             <!-- Architectural Utility Toggles -->
             <div class="utility-toggles-bar">
                 <button id="toggle-cycles" class="util-toggle-btn" title="Highlight circular dependency loops">
-                    <span>⚠ Cycles:</span> <span id="hud-cycles-count">0</span>
+                    <span class="material-symbols-outlined">warning</span> Cycles: <span id="hud-cycles-count">0</span>
                 </button>
                 <button id="toggle-orphans" class="util-toggle-btn" title="Highlight dead code / orphan files">
-                    <span>👻 Orphans:</span> <span id="hud-orphans-count">0</span>
+                    <span class="material-symbols-outlined">link_off</span> Unreferenced: <span id="hud-orphans-count">0</span>
                 </button>
                 <button id="toggle-clusters" class="util-toggle-btn active-clusters" title="Toggle 3D cluster hubs view">
-                    <span>📁 Hubs</span>
+                    <span class="material-symbols-outlined">folder</span> Hubs
                 </button>
             </div>
 
             <!-- Tier Filter Pills -->
             <div class="tier-filter-bar" id="tier-filter-bar">
                 <button class="tier-pill active" data-filter="all">All</button>
-                <button class="tier-pill" data-filter="entry">✦ Entry</button>
-                <button class="tier-pill" data-filter="routes">⬢ Routes</button>
-                <button class="tier-pill" data-filter="components">▧ UI</button>
-                <button class="tier-pill" data-filter="services">❖ Services</button>
-                <button class="tier-pill" data-filter="utils">▲ Utils</button>
+                <button class="tier-pill" data-filter="entry">Entry</button>
+                <button class="tier-pill" data-filter="routes">Routes</button>
+                <button class="tier-pill" data-filter="components">UI</button>
+                <button class="tier-pill" data-filter="services">Services</button>
+                <button class="tier-pill" data-filter="utils">Utils</button>
             </div>
 
             <!-- Search Input -->
             <div class="search-wrapper">
                 <div class="search-box-inner">
-                    <span class="search-icon">⌕</span>
+                    <span class="material-symbols-outlined search-icon">search</span>
                     <input type="text" id="search-input" class="search-input"
                         placeholder="Search file, cluster, path, ext... ( / )" autocomplete="off" spellcheck="false" />
-                    <button id="search-clear" class="search-clear-btn" title="Clear search">✕</button>
+                    <button id="search-clear" class="search-clear-btn" title="Clear search"><span class="material-symbols-outlined" style="font-size:14px;">close</span></button>
                 </div>
                 <div class="search-meta-bar">
                     <span id="search-count-label">All nodes active</span>
@@ -1072,7 +1141,7 @@
                 </div>
                 <div class="legend-list">
                     <div class="legend-item" data-tier="entry">
-                        <span class="legend-shape" style="color: var(--tier-entry);">✦</span>
+                        <span class="legend-shape" style="color: var(--tier-entry);">◆</span>
                         <span style="color: var(--tier-entry); font-weight:600;">Core Entry Star</span>
                         <span class="legend-shape-desc">Octahedron</span>
                     </div>
@@ -1082,12 +1151,12 @@
                         <span class="legend-shape-desc">Hex Prism</span>
                     </div>
                     <div class="legend-item" data-tier="components">
-                        <span class="legend-shape" style="color: var(--tier-components);">▧</span>
+                        <span class="legend-shape" style="color: var(--tier-components);">■</span>
                         <span style="color: var(--tier-components); font-weight:600;">UI & Components</span>
                         <span class="legend-shape-desc">Tech Cube</span>
                     </div>
                     <div class="legend-item" data-tier="services">
-                        <span class="legend-shape" style="color: var(--tier-services);">❖</span>
+                        <span class="legend-shape" style="color: var(--tier-services);">◈</span>
                         <span style="color: var(--tier-services); font-weight:600;">Services & Logic</span>
                         <span class="legend-shape-desc">Icosahedron</span>
                     </div>
@@ -1104,8 +1173,8 @@
                         <span><span class="flow-legend-dot" style="background: var(--flow-downstream);"></span>Downstream (Dependents)</span>
                     </div>
                     <div class="flow-legend-row">
-                        <span><span class="flow-legend-dot" style="background: var(--color-cycle);"></span>Circular Loop (⚠)</span>
-                        <span><span class="flow-legend-dot" style="background: var(--color-orphan);"></span>Orphan File (👻)</span>
+                        <span><span class="flow-legend-dot" style="background: var(--color-cycle);"></span>Circular Loop</span>
+                        <span><span class="flow-legend-dot" style="background: var(--color-orphan);"></span>Unreferenced File</span>
                     </div>
                 </div>
             </div>
@@ -1115,27 +1184,27 @@
     <!-- 3. ACTIVE CYCLE NAVIGATOR BANNER -->
     <div class="hud-cycle-banner" id="cycle-banner">
         <div class="cycle-title">
-            <span>⚠ Circular Dependency Loop</span>
+            <span class="material-symbols-outlined" style="color:var(--color-cycle);">warning</span> <span>Circular Dependency Loop</span>
             <span id="cycle-index-label" style="color:#fff;">(1/1)</span>
         </div>
-        <div class="cycle-path-preview" id="cycle-path-preview">a ➜ b ➜ a</div>
+        <div class="cycle-path-preview" id="cycle-path-preview">a → b → a</div>
         <div class="btn-group">
-            <button id="btn-prev-cycle" class="btn" title="Previous Cycle">◀</button>
-            <button id="btn-next-cycle" class="btn" title="Next Cycle">▶</button>
+            <button id="btn-prev-cycle" class="btn" title="Previous Cycle"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button id="btn-next-cycle" class="btn" title="Next Cycle"><span class="material-symbols-outlined">chevron_right</span></button>
         </div>
-        <button id="btn-close-cycles" class="btn" style="padding:4px 8px; font-size:10px;">✕ Exit</button>
+        <button id="btn-close-cycles" class="btn" style="padding:4px 8px; font-size:11px;"><span class="material-symbols-outlined" style="font-size:14px;">close</span> Exit</button>
     </div>
 
     <!-- 4. NODE INSPECTOR & BLAST RADIUS IMPACT PANEL -->
     <section class="hud-inspector" id="inspector-panel">
         <div class="inspector-header">
             <div class="inspector-title-row">
-                <span class="inspector-shape-icon" id="insp-shape">✦</span>
+                <span class="inspector-shape-icon" id="insp-shape">◆</span>
                 <div class="inspector-name" id="insp-name">index.ts</div>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
                 <div class="inspector-tier" id="insp-tier">ENTRY</div>
-                <button class="inspector-close-btn" id="insp-close" title="Close Inspector">✕</button>
+                <button class="inspector-close-btn" id="insp-close" title="Close Inspector"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
             </div>
         </div>
         <div class="inspector-path" id="insp-path">src/index.ts</div>
@@ -1143,7 +1212,7 @@
         <!-- Blast Radius Downstream Impact Card -->
         <div class="blast-radius-card" id="insp-blast-card">
             <div class="blast-header">
-                <span class="blast-title">💥 Blast Radius (Impact)</span>
+                <span class="blast-title"><span class="material-symbols-outlined">radar</span> Blast Radius (Impact)</span>
                 <span class="blast-badge" id="insp-blast-badge">0 files (0%)</span>
             </div>
             <div class="blast-desc" id="insp-blast-desc">
@@ -1178,10 +1247,10 @@
 
         <div class="inspector-actions">
             <button id="btn-insp-flyto" class="btn" title="Focus camera directly on this node">
-                <span>⌖</span> Focus Camera
+                <span class="material-symbols-outlined">center_focus_strong</span> Focus Camera
             </button>
             <button id="btn-insp-isolate" class="btn" title="Isolate active node and its connections">
-                <span>⊙</span> Isolate Flow
+                <span class="material-symbols-outlined">filter_center_focus</span> Isolate Flow
             </button>
         </div>
     </section>
@@ -1288,10 +1357,10 @@
         // 2. TIER CONFIGURATION & GEOMETRIES
         // =========================================================================
         const TIER_CONFIG = {
-            entry: { color: 0xfbbf24, hex: '#fbbf24', label: 'ENTRY', shapeIcon: '✦', shapeName: 'Octahedron' },
-            routes: { color: 0xf43f5e, hex: '#f43f5e', label: 'ROUTES', shapeIcon: '⬢', shapeName: 'Hex Prism' },
-            components: { color: 0x38bdf8, hex: '#38bdf8', label: 'COMPONENTS', shapeIcon: '▧', shapeName: 'Tech Cube' },
-            services: { color: 0xa855f7, hex: '#a855f7', label: 'SERVICES', shapeIcon: '❖', shapeName: 'Icosahedron' },
+            entry: { color: 0xD0D02D, hex: '#D0D02D', label: 'ENTRY', shapeIcon: '◆', shapeName: 'Octahedron' },
+            routes: { color: 0x38bdf8, hex: '#38bdf8', label: 'ROUTES', shapeIcon: '⬢', shapeName: 'Hex Prism' },
+            components: { color: 0x2dd4bf, hex: '#2dd4bf', label: 'COMPONENTS', shapeIcon: '■', shapeName: 'Tech Cube' },
+            services: { color: 0xf59e0b, hex: '#f59e0b', label: 'SERVICES', shapeIcon: '◈', shapeName: 'Icosahedron' },
             utils: { color: 0x10b981, hex: '#10b981', label: 'UTILS', shapeIcon: '▲', shapeName: 'Pyramid' }
         };
 
@@ -1320,8 +1389,8 @@
         // =========================================================================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x020206);
-        scene.fog = new THREE.FogExp2(0x020206, 0.0014);
+        scene.background = new THREE.Color(0x0a0c12);
+        scene.fog = new THREE.FogExp2(0x0a0c12, 0.0014);
 
         const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 2400);
         camera.position.set(0, 130, 240);
@@ -1403,7 +1472,7 @@
         dirLight.position.set(120, 180, 100);
         scene.add(dirLight);
 
-        const coreLight = new THREE.PointLight(0xfbbf24, 4.5, 380);
+        const coreLight = new THREE.PointLight(0xD0D02D, 4.0, 400);
         coreLight.position.set(0, 0, 0);
         scene.add(coreLight);
 
@@ -1455,7 +1524,7 @@
             ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(`📁 ${name} (${count})`, 256, 64);
+            ctx.fillText(`${name} (${count})`, 256, 64);
 
             const texture = new THREE.CanvasTexture(canvas);
             texture.minFilter = THREE.LinearFilter;
@@ -1489,7 +1558,7 @@
         const starMat = new THREE.ShaderMaterial({
             uniforms: {
                 uTime: { value: 0 },
-                uColor: { value: new THREE.Color(0xc7d2fe) }
+                uColor: { value: new THREE.Color(0xD0D02D) }
             },
             vertexShader: `
                 attribute float aPhase;
@@ -1546,9 +1615,9 @@
 
             const hubGeo = new THREE.IcosahedronGeometry(3.6, 1);
             const hubMat = new THREE.MeshStandardMaterial({
-                color: 0x6366f1,
-                emissive: 0x4f46e5,
-                emissiveIntensity: 0.9,
+                color: 0x0284c7,
+                emissive: 0x0369a1,
+                emissiveIntensity: 0.8,
                 roughness: 0.2,
                 metalness: 0.5,
                 transparent: true,
@@ -1562,16 +1631,16 @@
             hubMeshes.push(hubMesh);
 
             const wireGeo = new THREE.WireframeGeometry(hubGeo);
-            const wireMat = new THREE.LineBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.4 });
+            const wireMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.4 });
             hubMesh.add(new THREE.LineSegments(wireGeo, wireMat));
 
             const ringGeo = new THREE.RingGeometry(5.2, 5.6, 32);
             ringGeo.rotateX(Math.PI / 2);
-            const ringMat = new THREE.MeshBasicMaterial({ color: 0x818cf8, side: THREE.DoubleSide, transparent: true, opacity: 0.35 });
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0.35 });
             const haloRing = new THREE.Mesh(ringGeo, ringMat);
             hubMesh.add(haloRing);
 
-            const labelSprite = createClusterBillboardSprite(c.name, c.fileCount, '#818cf8');
+            const labelSprite = createClusterBillboardSprite(c.name, c.fileCount, '#38bdf8');
             labelSprite.position.set(clusterPos.x, clusterPos.y + 7.5, clusterPos.z);
             orbitalGroup.add(labelSprite);
 
@@ -1769,7 +1838,7 @@
         const downstreamColor = new THREE.Color(0xf59e0b);
         const blastColor = new THREE.Color(0xf97316);
         const cycleColor = new THREE.Color(0xef4444);
-        const orphanColor = new THREE.Color(0xc084fc);
+        const orphanColor = new THREE.Color(0x94a3b8);
 
         function computeBlastRadius(startNodeId) {
             const visited = new Set();
@@ -2028,7 +2097,7 @@
         btnToggleAllClusters.addEventListener('click', () => {
             allClustersExpanded = !allClustersExpanded;
             clusterHubs.forEach((_, cid) => toggleCluster(cid, allClustersExpanded));
-            btnToggleAllClusters.innerHTML = allClustersExpanded ? '<span>⊟</span> Clusters' : '<span>⊞</span> Clusters';
+            btnToggleAllClusters.innerHTML = allClustersExpanded ? '<span class="material-symbols-outlined">unfold_less</span> Clusters' : '<span class="material-symbols-outlined">unfold_more</span> Clusters';
         });
 
         // =========================================================================
@@ -2046,7 +2115,7 @@
             cycleBanner.classList.add('visible');
             const cycle = cyclesList[activeCycleIdx];
             cycleIndexLabel.textContent = `(${activeCycleIdx + 1}/${cyclesList.length})`;
-            cyclePathPreview.textContent = cycle.path.map(p => p.split('/').pop()).join(' ➜ ');
+            cyclePathPreview.textContent = cycle.path.map(p => p.split('/').pop()).join(' → ');
 
             const firstNode = nodeMap.get(cycle.path[0]);
             if (firstNode) flyTo(firstNode.position, 55);
@@ -2153,7 +2222,7 @@
         btnFlowSpeed.addEventListener('click', () => {
             currentSpeedIdx = (currentSpeedIdx + 1) % speeds.length;
             const s = speeds[currentSpeedIdx];
-            btnFlowSpeed.innerHTML = `<span>⚡</span> ${s.label}`;
+            const lbl = document.getElementById('flow-speed-text'); if (lbl) lbl.textContent = s.label;
             flowSpeedMultiplier = s.mult;
         });
 
@@ -2226,8 +2295,8 @@
                             <div class="result-name-row">
                                 <span>${highlightMatch(node.name, searchFilterText)}</span>
                                 <span class="result-tier-badge" style="background:${cfg.hex}22; color:${cfg.hex}">${node.tier}</span>
-                                ${node.hasCycle ? '<span style="color:#ef4444; font-size:8px;">⚠ Cycle</span>' : ''}
-                                ${node.isOrphan ? '<span style="color:#c084fc; font-size:8px;">👻 Orphan</span>' : ''}
+                                ${node.hasCycle ? '<span style="color:var(--color-cycle); font-size:9px; font-weight:700;">Cycle</span>' : ''}
+                                ${node.isOrphan ? '<span style="color:var(--color-orphan); font-size:9px;">Unreferenced</span>' : ''}
                             </div>
                             <div class="result-path">${highlightMatch(node.path, searchFilterText)}</div>
                         </div>
@@ -2331,11 +2400,11 @@
 
             const healthEl = document.getElementById('insp-health');
             if (node.hasCycle) {
-                healthEl.innerHTML = '<span style="color:#ef4444; font-weight:700;">⚠ Circular Loop</span>';
+                healthEl.innerHTML = '<span style="color:var(--color-cycle); font-weight:700; display:inline-flex; align-items:center; gap:3px;"><span class="material-symbols-outlined" style="font-size:13px;">warning</span> Circular Loop</span>';
             } else if (node.isOrphan) {
-                healthEl.innerHTML = '<span style="color:#c084fc; font-weight:700;">👻 Orphan File</span>';
+                healthEl.innerHTML = '<span style="color:var(--color-orphan); font-weight:700; display:inline-flex; align-items:center; gap:3px;"><span class="material-symbols-outlined" style="font-size:13px;">link_off</span> Unreferenced</span>';
             } else {
-                healthEl.innerHTML = '<span style="color:#10b981; font-weight:700;">✓ Healthy</span>';
+                healthEl.innerHTML = '<span style="color:#10b981; font-weight:700; display:inline-flex; align-items:center; gap:3px;"><span class="material-symbols-outlined" style="font-size:13px;">check_circle</span> Healthy</span>';
             }
 
             const blastSet = computeBlastRadius(node.id);
@@ -2445,7 +2514,7 @@
                 tooltip.style.display = 'block';
                 tooltip.style.left = `${e.clientX}px`;
                 tooltip.style.top = `${e.clientY}px`;
-                tooltip.innerHTML = `<strong>${cfg.shapeIcon} ${entry.node.name}</strong> <span style="color:#94a3b8">(${entry.node.tier})</span><br/><span style="color:#818cf8; font-size:9px;">📁 ${entry.node.clusterGroup || '(root)'}</span>`;
+                tooltip.innerHTML = `<strong>${cfg.shapeIcon} ${entry.node.name}</strong> <span style="color:var(--text-muted)">(${entry.node.tier})</span><br/><span style="color:var(--tier-routes); font-size:9px;">${entry.node.clusterGroup || '(root)'}</span>`;
 
                 if (!selectedNodeId && hoveredNodeId !== id) {
                     hoveredNodeId = id;
@@ -2465,7 +2534,7 @@
                 tooltip.style.display = 'block';
                 tooltip.style.left = `${e.clientX}px`;
                 tooltip.style.top = `${e.clientY}px`;
-                tooltip.innerHTML = `<strong>📁 Cluster: ${cObj.cluster.name}</strong> (${cObj.cluster.fileCount} files)<br/><span style="color:#94a3b8; font-size:9px;">Left-Click to expand | Right-Click to collapse</span>`;
+                tooltip.innerHTML = `<strong>Cluster: ${cObj.cluster.name}</strong> (${cObj.cluster.fileCount} files)<br/><span style="color:#94a3b8; font-size:9px;">Left-Click to expand | Right-Click to collapse</span>`;
                 return;
             }
 
@@ -2572,6 +2641,71 @@
         });
 
         // =========================================================================
+        
+        // =========================================================================
+        // THEME MANAGEMENT (Dark & Light Mode Synchronized with Three.js)
+        // =========================================================================
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            try { localStorage.setItem('remi-orbit-theme', theme); } catch (e) {}
+            const isLight = theme === 'light';
+
+            const toggleBtn = document.getElementById('btn-theme-toggle');
+            if (toggleBtn) {
+                toggleBtn.innerHTML = isLight
+                    ? '<span class="material-symbols-outlined">dark_mode</span><span id="theme-label">Dark</span>'
+                    : '<span class="material-symbols-outlined">light_mode</span><span id="theme-label">Light</span>';
+            }
+
+            const bgHex = isLight ? 0xf8fafc : 0x0a0c12;
+            if (scene) {
+                scene.background.setHex(bgHex);
+                if (scene.fog) {
+                    scene.fog.color.setHex(bgHex);
+                    scene.fog.density = isLight ? 0.0008 : 0.0014;
+                }
+            }
+            if (ambientLight) {
+                ambientLight.intensity = isLight ? 1.05 : 0.65;
+                ambientLight.color.setHex(isLight ? 0xffffff : 0xf1f5f9);
+            }
+            if (dirLight) {
+                dirLight.intensity = isLight ? 0.85 : 0.7;
+            }
+            if (starMat && starMat.uniforms && starMat.uniforms.uColor) {
+                starMat.uniforms.uColor.value.setHex(isLight ? 0x94a3b8 : 0xD0D02D);
+            }
+            if (typeof edgeObjects !== 'undefined' && edgeObjects.length > 0) {
+                edgeObjects.forEach(e => {
+                    if (e.lineMat) {
+                        e.lineMat.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+                        e.lineMat.opacity = e.isCycle ? (isLight ? 0.95 : 0.85) : (isLight ? 0.35 : 0.22);
+                        e.lineMat.needsUpdate = true;
+                    }
+                });
+            }
+            if (typeof nodeMap !== 'undefined' && nodeMap.size > 0) {
+                nodeMap.forEach(e => {
+                    if (e.sprite && e.sprite.material) {
+                        e.sprite.material.opacity = isLight ? 0.25 : (e.node.tier === 'entry' ? 0.9 : 0.52);
+                        e.sprite.material.needsUpdate = true;
+                    }
+                });
+            }
+        }
+
+        let initialTheme = 'dark';
+        try { initialTheme = localStorage.getItem('remi-orbit-theme') || 'dark'; } catch (e) {}
+        applyTheme(initialTheme);
+
+        const btnThemeToggle = document.getElementById('btn-theme-toggle');
+        if (btnThemeToggle) {
+            btnThemeToggle.addEventListener('click', () => {
+                const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+                applyTheme(cur === 'dark' ? 'light' : 'dark');
+            });
+        }
+
         // 17. ANIMATION LOOP (60+ FPS)
         // =========================================================================
         const clock = new THREE.Clock();
