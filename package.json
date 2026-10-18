@@ -1,6 +1,6 @@
 {
   "name": "zaarvy-remi",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Remi: Autonomous developer memory CLI, git commit sync, and interactive work graph package.",
   "main": "bin/remi.js",
   "type": "module",
