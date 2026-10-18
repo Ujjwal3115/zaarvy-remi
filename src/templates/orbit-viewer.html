@@ -185,7 +185,7 @@
         }
 
         .stat-pill b {
-            color: #fff;
+            color: var(--text-primary);
             margin-left: 2px;
         }
 
@@ -363,7 +363,7 @@
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            color: #fff;
+            color: var(--text-primary);
             cursor: pointer;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
             display: none;
@@ -515,7 +515,7 @@
         }
 
         .search-clear-btn:hover {
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .search-meta-bar {
@@ -588,7 +588,7 @@
             gap: 5px;
             font-size: 11px;
             font-weight: 600;
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .result-name-row mark {
@@ -661,7 +661,7 @@
             align-items: center;
             gap: 8px;
             font-size: 11px;
-            color: #e2e8f0;
+            color: var(--text-primary);
             cursor: pointer;
             padding: 3px 5px;
             border-radius: 5px;
@@ -816,7 +816,7 @@
         .inspector-name {
             font-size: 13px;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-primary);
             word-break: break-all;
         }
 
@@ -831,7 +831,7 @@
         }
 
         .inspector-close-btn:hover {
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .inspector-tier {
@@ -909,7 +909,7 @@
         }
 
         .stat-row span:last-child {
-            color: #fff;
+            color: var(--text-primary);
             font-weight: 600;
         }
 
@@ -945,7 +945,7 @@
             border-radius: 4px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #cbd5e1;
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.15s ease;
         }
@@ -1006,6 +1006,245 @@
                 width: 300px;
             }
         }
+
+        /* =========================================================================
+           LIGHT THEME COMPREHENSIVE CONTRAST & VISIBILITY OVERRIDES
+           ========================================================================= */
+        /* 1. Utility Toggles Bar */
+        [data-theme="light"] .util-toggle-btn {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(15, 23, 42, 0.14);
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .util-toggle-btn:hover {
+            border-color: rgba(15, 23, 42, 0.3);
+            color: var(--text-primary);
+            background: #ffffff;
+        }
+
+        [data-theme="light"] .util-toggle-btn.active-clusters {
+            background: rgba(2, 132, 199, 0.14);
+            border-color: #0284c7;
+            color: #0284c7;
+            box-shadow: 0 0 10px rgba(2, 132, 199, 0.22);
+            font-weight: 800;
+        }
+
+        [data-theme="light"] .util-toggle-btn.active-cycles {
+            background: rgba(239, 68, 68, 0.14);
+            border-color: #dc2626;
+            color: #b91c1c;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.22);
+            font-weight: 800;
+        }
+
+        [data-theme="light"] .util-toggle-btn.active-orphans {
+            background: rgba(100, 116, 139, 0.14);
+            border-color: #475569;
+            color: #334155;
+            box-shadow: 0 0 10px rgba(100, 116, 139, 0.22);
+            font-weight: 800;
+        }
+
+        /* 2. Topbar Stat Pills */
+        [data-theme="light"] .stat-pill {
+            background: rgba(255, 255, 255, 0.90);
+            border-color: rgba(15, 23, 42, 0.12);
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .stat-pill b {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        /* 3. Tier Filter Bar */
+        [data-theme="light"] .tier-pill {
+            background: rgba(255, 255, 255, 0.90);
+            border-color: rgba(15, 23, 42, 0.12);
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .tier-pill:hover {
+            border-color: rgba(15, 23, 42, 0.3);
+            color: var(--text-primary);
+            background: #ffffff;
+        }
+
+        [data-theme="light"] .tier-pill.active {
+            background: rgba(208, 208, 45, 0.24);
+            border-color: #a1a117;
+            color: #424204;
+            font-weight: 800;
+        }
+
+        /* 4. Buttons and Button Groups */
+        [data-theme="light"] .btn {
+            background: rgba(255, 255, 255, 0.88);
+            border-color: rgba(15, 23, 42, 0.14);
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .btn:hover {
+            background: rgba(208, 208, 45, 0.18);
+            border-color: #a1a117;
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .btn.active {
+            background: rgba(208, 208, 45, 0.24);
+            border-color: #a1a117;
+            color: #424204;
+            font-weight: 700;
+        }
+
+        [data-theme="light"] .btn-group {
+            background: rgba(255, 255, 255, 0.90);
+            border-color: rgba(15, 23, 42, 0.14);
+        }
+
+        [data-theme="light"] .btn-group .btn:not(:last-child) {
+            border-right: 1px solid rgba(15, 23, 42, 0.12);
+        }
+
+        /* 5. Custom Select Dropdowns */
+        [data-theme="light"] .select-custom {
+            background: rgba(255, 255, 255, 0.90);
+            border-color: rgba(15, 23, 42, 0.14);
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .select-custom option {
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        /* 6. Sidebar Headers, Dividers, & Legend */
+        [data-theme="light"] .sidebar-header {
+            border-bottom-color: rgba(15, 23, 42, 0.10);
+            background: rgba(15, 23, 42, 0.02);
+        }
+
+        [data-theme="light"] .legend-card {
+            background: rgba(248, 250, 252, 0.85);
+            border-color: rgba(15, 23, 42, 0.10);
+        }
+
+        [data-theme="light"] .legend-item {
+            color: #1e293b;
+        }
+
+        [data-theme="light"] .legend-item:hover {
+            background: rgba(15, 23, 42, 0.06);
+        }
+
+        [data-theme="light"] .flow-legend-indicator {
+            border-top-color: rgba(15, 23, 42, 0.10);
+        }
+
+        /* 7. Search Results Dropdown */
+        [data-theme="light"] .search-results-container {
+            background: #ffffff;
+            border-color: rgba(15, 23, 42, 0.14);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+        }
+
+        [data-theme="light"] .search-result-item {
+            border-bottom-color: rgba(15, 23, 42, 0.06);
+        }
+
+        [data-theme="light"] .search-result-item:hover,
+        [data-theme="light"] .search-result-item.highlighted {
+            background: rgba(208, 208, 45, 0.16);
+        }
+
+        [data-theme="light"] .result-name-row {
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .result-stats-badge {
+            background: rgba(15, 23, 42, 0.06);
+            color: var(--text-muted);
+        }
+
+        /* 8. Inspector & Blast Radius Impact */
+        [data-theme="light"] .inspector-name {
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .inspector-stats {
+            border-top-color: rgba(15, 23, 42, 0.10);
+        }
+
+        [data-theme="light"] .stat-row span:last-child {
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .flow-section {
+            border-top-color: rgba(15, 23, 42, 0.10);
+        }
+
+        [data-theme="light"] .flow-chip {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(15, 23, 42, 0.14);
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .flow-chip:hover {
+            background: rgba(208, 208, 45, 0.20);
+            border-color: #a1a117;
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .inspector-actions {
+            border-top-color: rgba(15, 23, 42, 0.10);
+        }
+
+        [data-theme="light"] .blast-radius-card {
+            background: rgba(249, 115, 22, 0.08);
+            border-color: rgba(249, 115, 22, 0.35);
+        }
+
+        [data-theme="light"] .blast-title {
+            color: #c2410c;
+        }
+
+        [data-theme="light"] .blast-desc {
+            color: #7c2d12;
+        }
+
+        /* 9. Active Cycle Navigator Banner */
+        [data-theme="light"] .hud-cycle-banner {
+            background: rgba(254, 242, 242, 0.98);
+            border-color: #ef4444;
+            box-shadow: 0 0 24px rgba(239, 68, 68, 0.2);
+        }
+
+        [data-theme="light"] .cycle-title {
+            color: #b91c1c;
+        }
+
+        [data-theme="light"] .cycle-path-preview {
+            color: #0f172a;
+        }
+
+        /* 10. Hover Tooltip */
+        [data-theme="light"] #hover-tooltip {
+            background: rgba(255, 255, 255, 0.96);
+            border-color: rgba(15, 23, 42, 0.16);
+            color: #0f172a;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 11. Scrollbars */
+        [data-theme="light"] .sidebar-body::-webkit-scrollbar-thumb,
+        [data-theme="light"] .hud-inspector::-webkit-scrollbar-thumb,
+        [data-theme="light"] .search-results-container::-webkit-scrollbar-thumb,
+        [data-theme="light"] .flow-chips::-webkit-scrollbar-thumb {
+            background: rgba(15, 23, 42, 0.20);
+        }
+
     </style>
 
     <!-- Three.js & OrbitControls via CDN -->
