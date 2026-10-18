@@ -6,7 +6,8 @@ import { startOrbitServer } from '../orbit/server.js';
 
 export async function orbitCommand(directory = '.', options = {}) {
   try {
-    const rootPath = path.resolve(process.cwd(), directory || '.');
+    const dirStr = Array.isArray(directory) && directory.length > 0 ? directory.join(' ') : (typeof directory === 'string' ? directory : '.');
+    const rootPath = path.resolve(process.cwd(), dirStr || '.');
 
     if (!fs.existsSync(rootPath)) {
       console.error(chalk.red(`\n[Error] Target directory not found: ${rootPath}\n`));

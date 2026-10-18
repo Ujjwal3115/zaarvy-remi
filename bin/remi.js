@@ -87,7 +87,7 @@ Examples:
 
 // orbit (alias: arch)
 program
-  .command('orbit [directory]')
+  .command('orbit [directory...]')
   .alias('arch')
   .description('Launch the 3D Orbital Architecture & Dependency Visualizer in browser')
   .option('-p, --port <number>', 'Port to run the visualizer server (default: 3333)', '3333')
@@ -100,7 +100,8 @@ Examples:
   $ remi orbit --no-open
 `)
   .action(async (directory, options) => {
-    await orbitCommand(directory, options);
+    const targetDir = Array.isArray(directory) && directory.length > 0 ? directory.join(' ') : (typeof directory === 'string' ? directory : '.');
+    await orbitCommand(targetDir, options);
   });
 
 // export

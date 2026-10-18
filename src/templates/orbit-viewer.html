@@ -42,7 +42,7 @@
         }
 
         [data-theme="light"] {
-            --bg-deep: #f8fafc;
+            --bg-deep: #eaedf2;
             --glass-bg: rgba(255, 255, 255, 0.94);
             --glass-border: rgba(15, 23, 42, 0.14);
             --glass-highlight: rgba(208, 208, 45, 0.35);
@@ -1637,6 +1637,44 @@
         scene.add(starField);
 
         // =========================================================================
+        // 5b. 3D ARCHITECTURAL GROUND PLANE & COORDINATE GRID
+        // =========================================================================
+        const floorY = -65;
+        const gridFloorGroup = new THREE.Group();
+        gridFloorGroup.position.y = floorY;
+        scene.add(gridFloorGroup);
+
+        // Cartesian 3D perspective grid helpers (tailored for Light and Dark modes)
+        const gridHelperLight = new THREE.GridHelper(680, 68, 0x94a3b8, 0xcbd5e1);
+        gridHelperLight.position.y = 0;
+        gridHelperLight.material.transparent = true;
+        gridHelperLight.material.opacity = 0.55;
+        gridFloorGroup.add(gridHelperLight);
+
+        const gridHelperDark = new THREE.GridHelper(680, 68, 0x38bdf8, 0x1e293b);
+        gridHelperDark.position.y = 0;
+        gridHelperDark.material.transparent = true;
+        gridHelperDark.material.opacity = 0.35;
+        gridFloorGroup.add(gridHelperDark);
+
+        // Concentric Orbital Telemetry Radar Rings on the Floor
+        const floorRings = [];
+        const ringRadii = [60, 120, 190, 270, 360];
+        ringRadii.forEach(rad => {
+            const ringGeo = new THREE.RingGeometry(rad - 0.5, rad + 0.5, 96);
+            ringGeo.rotateX(Math.PI / 2);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: 0x94a3b8,
+                transparent: true,
+                opacity: 0.25,
+                side: THREE.DoubleSide
+            });
+            const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+            gridFloorGroup.add(ringMesh);
+            floorRings.push(ringMesh);
+        });
+
+        // =========================================================================
         // 6. HIERARCHICAL 3D CLUSTER HUBS & SUB-ORBIT FILE NODES
         // =========================================================================
         const orbitalGroup = new THREE.Group();
@@ -2758,13 +2796,25 @@
                     : '<span class="material-symbols-outlined">light_mode</span><span id="theme-label">Light</span>';
             }
 
-            const bgHex = isLight ? 0xf8fafc : 0x0a0c12;
+            const bgHex = isLight ? 0xeaedf2 : 0x0a0c12;
             if (scene) {
                 scene.background.setHex(bgHex);
                 if (scene.fog) {
                     scene.fog.color.setHex(bgHex);
-                    scene.fog.density = isLight ? 0.0006 : 0.0014;
+                    scene.fog.density = isLight ? 0.0005 : 0.0014;
                 }
+            }
+            if (typeof gridHelperLight !== 'undefined' && gridHelperLight) {
+                gridHelperLight.visible = isLight;
+            }
+            if (typeof gridHelperDark !== 'undefined' && gridHelperDark) {
+                gridHelperDark.visible = !isLight;
+            }
+            if (typeof floorRings !== 'undefined' && floorRings.length > 0) {
+                floorRings.forEach(rm => {
+                    rm.material.color.setHex(isLight ? 0x0284c7 : 0x38bdf8);
+                    rm.material.opacity = isLight ? 0.25 : 0.18;
+                });
             }
             if (ambientLight) {
                 ambientLight.intensity = isLight ? 1.15 : 0.65;
