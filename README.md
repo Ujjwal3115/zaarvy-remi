@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://zaarvy.in/Subtract.png" alt="Remi 8-bit Mascot Logo" width="100" />
   <h1>Remi — Autonomous Developer Memory NPM Package</h1>
-  <p><strong>The official Remi CLI package for automated Git tracking, standup generation, and interactive 2D D3 work graphs.</strong></p>
+  <p><strong>The official Remi CLI package for automated Git tracking, standup generation, interactive 2D D3 work graphs, and 3D Orbital codebase architecture visualization.</strong></p>
 
   <p>
     <a href="https://zaarvy.in"><img src="https://img.shields.io/badge/Official_Website-zaarvy.in-D0D02D?style=for-the-badge&logo=googlechrome&logoColor=black" alt="Website" /></a>
@@ -63,6 +63,49 @@ npx zaarvy-remi --help
   <img src="https://zaarvy.in/remi-graph-dark.png" alt="Zaarvy Remi Interactive 2D D3 Knowledge Graph" width="800" />
   <p><em>Interactive 2D D3 Force-Directed Work Graph generated with <code>remi graph</code></em></p>
 </div>
+
+---
+
+## 🪐 REMI ORBIT — 3D Architecture & Dependency Visualizer
+
+Launch a real-time, interactive 3D WebGL orbital simulation of your entire codebase architecture, concentric module tiers, dependency flows, and blast-radius impact analysis with a single command:
+
+```bash
+# Launch for current repository (auto-opens browser at http://localhost:3333)
+remi orbit
+
+# Visualize any target project folder or monorepo
+remi orbit /path/to/project --port 4000
+
+# Short alias
+remi arch .
+```
+
+<div align="center">
+  <img src="docs_assets/remi-orbit-dark.png" alt="REMI ORBIT 3D Codebase Visualizer (Dark Space Mode)" width="850" />
+  <p><em>3D Orbital Codebase Dependency & Architecture Visualizer in Deep Space Mode</em></p>
+</div>
+
+<div align="center">
+  <img src="docs_assets/remi-orbit-light.png" alt="REMI ORBIT 3D Codebase Visualizer (Studio Light Mode)" width="850" />
+  <p><em>Studio Perspective Floor Grid & High-Contrast Light Mode</em></p>
+</div>
+
+### ✨ Orbit Key Capabilities:
+
+- 🪐 **Orbital Concentric Tiers**: File nodes are categorized and positioned in orbital shells according to their architectural layer:
+  - **Core Entry Stars** (Golden Octahedrons)
+  - **Routes & APIs** (Cyan Hex Prisms)
+  - **UI & Components** (Teal Tech Cubes)
+  - **Services & Logic** (Amber Icosahedrons)
+  - **Utils & DB Models** (Emerald Pyramids)
+- 📁 **Hierarchical 3D Cluster Hubs**: Modules and directory sub-trees automatically cluster into orbiting planetary systems with interactive expand/collapse halos.
+- ⚠️ **Circular Dependency Loop Detector**: Real-time DFS cycle graph traversal highlights and isolates circular dependency chains before they cause runtime deadlocks.
+- 🔗 **Dead Code & Orphan Detector**: Instantly isolates unreferenced files with zero incoming or outgoing dependencies.
+- 💥 **Blast Radius Impact Analysis**: Click any file to inspect upstream imports, downstream dependents, and compute an instant architectural fragility score.
+- 🎨 **Studio Dual Themes**: Seamlessly switch between dark space slate and studio light mode with a 3D perspective floor grid and concentric orbital telemetry rings.
+- 📦 **Standalone Offline HTML Export**: Export a self-contained, interactive HTML file with a single click to share with teammates or attach to documentation.
+
 
 ---
 
